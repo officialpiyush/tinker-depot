@@ -3,7 +3,7 @@ import { LucidePhone, LucideVideo } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { connect, createLocalTracks } from "twilio-video";
 import Topic from "~/components/Topic";
 import { getServerAuthSession } from "~/server/auth";
@@ -19,6 +19,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 export default function UserCallPage() {
   const router = useRouter();
   const session = useSession();
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [now, setNow] = useState("00:00 GG");
   const [timeElapsed, setTimeElapsed] = useState("00:00");
 
@@ -85,22 +86,34 @@ export default function UserCallPage() {
         participant.tracks.forEach((publication) => {
           if (publication.isSubscribed) {
             const track = publication.track;
-            document
-              .getElementById("remote-media-div")
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-              // @ts-expect-error somethit
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-              ?.appendChild(track?.attach());
+
+            if (!track) {
+              console.log("No track");
+              return;
+            }
+
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            // @ts-expect-error somethit
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+            const attached: HTMLVide = track.attach();
+
+            if (track.kind === "video") {
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-non-null-assertion
+              videoRef.current!.src = attached.src;
+            }
           }
         });
 
         participant.on("trackSubscribed", (track) => {
-          document
-            .getElementById("remote-media-div")
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            // @ts-expect-error somethit
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            ?.appendChild(track?.attach());
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+          // @ts-expect-error somethit
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+          const attached: HTMLVide = track.attach();
+
+          if (track.kind === "video") {
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-non-null-assertion
+            videoRef.current!.src = attached.src;
+          }
         });
       });
 
@@ -140,13 +153,14 @@ export default function UserCallPage() {
 
         {/* call screen */}
         <div className="flex-1" id="remote-media-div">
-          <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
+          <video className="h-full w-full" ref={videoRef}></video>
+          {/* <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
             <div className="rounded-full bg-white p-6 ring-2 ring-black">
               <LucidePhone size={52} color="#8C78C3" />
             </div>
 
             <span>Start a Call</span>
-          </div>
+          </div> */}
         </div>
 
         <Topic title="ESP8266" />
