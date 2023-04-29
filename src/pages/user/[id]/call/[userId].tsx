@@ -33,9 +33,14 @@ export default function UserCallPage() {
     }
   );
 
-  const { data: roomData } = api.twilioRooms.getAccessTokenForRoom.useQuery({
-    talkingWith: userId as string,
-  });
+  const { data: roomData } = api.twilioRooms.getAccessTokenForRoom.useQuery(
+    {
+      talkingWith: userId as string,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -66,7 +71,7 @@ export default function UserCallPage() {
         video: true,
       });
 
-      room.on('participantConnected', participant => {
+      room.on("participantConnected", (participant) => {
         console.log(`Participant connected: ${participant.identity}`);
       });
     } catch (error) {
