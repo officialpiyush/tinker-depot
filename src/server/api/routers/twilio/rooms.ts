@@ -64,7 +64,7 @@ export const twilioRoomsRouter = createTRPCRouter({
         if (error.code == 20404) {
           await twilioClient.video.v1.rooms.create({
             uniqueName: id,
-            type: "go",
+            type: "group",
           });
         } else {
           throw error;
