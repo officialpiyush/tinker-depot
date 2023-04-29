@@ -37,7 +37,7 @@ export default function LoginPage() {
       // send otp
       const otpID = await generateOtpMutation.mutateAsync({ phoneNumber });
 
-      alert("OTP sent");
+      alert(`OTP sent to ${phoneNumber} with ID ${otpID.verificationSid}`);
     }
   };
 
@@ -58,7 +58,7 @@ export default function LoginPage() {
 
                 <div className="flex gap-2 text-white transition-all duration-700">
                   <input
-                  value={isOtpSent ? otp : phoneNumber}
+                    value={isOtpSent ? otp : phoneNumber}
                     onChange={(e) =>
                       isOtpSent
                         ? setOtp(e.currentTarget.value || "")
