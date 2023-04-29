@@ -19,6 +19,7 @@ export default function UserCallPage() {
   const router = useRouter();
   const session = useSession();
   const [now, setNow] = useState("00:00 GG");
+  const [timeElapsed, setTimeElapsed] = useState("00:00");
 
   const { id, userId } = router.query;
 
@@ -50,7 +51,14 @@ export default function UserCallPage() {
 
   useEffect(() => {
     if (roomData) {
-      console.log(roomData);
+      const roomTimeInterval = setInterval(() => {
+        const elapsed = dayjs().diff(dayjs(roomData.startedAt), "second");
+        // convert seeconds to mm:ss
+        const converted = `${Math.floor(elapsed / 60)}:${elapsed % 60}`;
+        setTimeElapsed(converted);
+      }, 1000);
+
+      return () => clearInterval(roomTimeInterval);
     }
   }, [roomData]);
 
@@ -104,7 +112,7 @@ export default function UserCallPage() {
         <div className="flex w-full gap-2">
           <div className="flex w-full flex-col items-center gap-2 rounded-md bg-[#8C78C3] px-4 py-4 text-[#EDE6F4]">
             <div className="rounded-md bg-[#CABDD9] px-4 py-2 text-black">
-              00 : 00
+              {timeElapsed}
             </div>
 
             <div className="font-medium uppercase">Ongoing Call</div>

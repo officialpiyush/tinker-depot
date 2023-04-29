@@ -10,6 +10,7 @@ export const roomsRouter = createTRPCRouter({
       const { id: userId } = ctx.session.user;
 
       let id: string;
+      let startedAt: Date;
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const roomExists = await ctx.prisma.rooms.findMany({
@@ -27,6 +28,7 @@ export const roomsRouter = createTRPCRouter({
         },
         select: {
           id: true,
+          startedAt: true,
         },
       });
 
@@ -39,14 +41,17 @@ export const roomsRouter = createTRPCRouter({
         });
 
         id = createdRoom.id;
+        startedAt = createdRoom.startedAt;
       } else if (roomExists[0]) {
         id = roomExists[0].id;
+        startedAt = roomExists[0].startedAt;
       } else {
         throw new Error("No ID found");
       }
 
       return {
         roomId: id,
+        startedAt,
       };
     }),
 });
