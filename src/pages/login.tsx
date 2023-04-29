@@ -23,6 +23,12 @@ export default function LoginPage() {
         verificationCode: otp,
       });
 
+      if (isVerified.status === "approved") {
+        alert("Login success");
+      } else {
+        alert("Login failed");
+      }
+
       console.log(isVerified);
     } else {
       if (!phoneNumber) return;
@@ -30,7 +36,8 @@ export default function LoginPage() {
 
       // send otp
       const otpID = await generateOtpMutation.mutateAsync({ phoneNumber });
-      console.log(otpID);
+
+      alert("OTP sent");
     }
   };
 
@@ -49,7 +56,7 @@ export default function LoginPage() {
                   />
                 </div>
 
-                <div className="flex gap-2 text-white">
+                <div className="flex gap-2 text-white transition-all duration-700">
                   <input
                     onChange={(e) =>
                       isOtpSent
@@ -67,8 +74,10 @@ export default function LoginPage() {
                         : setPhoneNumber(e.currentTarget.value || "")
                     }
                     type="number"
-                    className="rounded-md bg-[#9D5EE8] px-4 placeholder-white focus:outline-none focus:ring-0"
-                    placeholder="Enter your phone number"
+                    className="rounded-md bg-[#9D5EE8] px-4 placeholder-white transition-all duration-700 focus:outline-none focus:ring-0"
+                    placeholder={
+                      isOtpSent ? "Enter OTP" : "Enter your phone number"
+                    }
                   />
 
                   <div>
@@ -76,7 +85,7 @@ export default function LoginPage() {
                       onClick={() => {
                         void handleLogin();
                       }}
-                      className="flex items-center justify-center rounded-md bg-[#EDAE59] px-4 py-3"
+                      className="flex items-center justify-center rounded-md bg-[#EDAE59] px-4 py-3 transition-all duration-700"
                     >
                       {isOtpSent ? (
                         <ArrowRight color="black" />
