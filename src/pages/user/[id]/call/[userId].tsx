@@ -4,11 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
 import { useEffect, useState } from "react";
-import {
-  connect,
-  createLocalTracks,
-  createLocalVideoTrack,
-} from "twilio-video";
+import { connect, createLocalTracks } from "twilio-video";
 import Topic from "~/components/Topic";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
@@ -68,8 +64,6 @@ export default function UserCallPage() {
   }, [roomData]);
 
   const connectToRoom = async () => {
-    const localVideoTrack = await createLocalVideoTrack();
-
     const localTracks = await createLocalTracks({
       audio: true,
       video: { width: 640 },
@@ -87,6 +81,31 @@ export default function UserCallPage() {
 
       room.on("participantConnected", (participant) => {
         console.log(`Participant connected: ${participant.identity}`);
+
+        participant.tracks.forEach((publication) => {
+          if (publication.isSubscribed) {
+            const track = publication.track;
+            document
+              .getElementById("remote-media-div")
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+              // @ts-expect-error somethit
+              // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+              ?.appendChild(track?.attach());
+          }
+        });
+
+        participant.on("trackSubscribed", (track) => {
+          document
+            .getElementById("remote-media-div")
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            // @ts-expect-error somethit
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            ?.appendChild(track?.attach());
+        });
+      });
+
+      room.on("participantDisconnected", (participant) => {
+        console.log(`Participant disconnected: ${participant.identity}`);
       });
     } catch (error) {
       console.log(`Unable to connect to Room`, error);
@@ -120,7 +139,7 @@ export default function UserCallPage() {
         </div>
 
         {/* call screen */}
-        <div className="flex-1">
+        <div className="flex-1" id="remote-media-div">
           <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
             <div className="rounded-full bg-white p-6 ring-2 ring-black">
               <LucidePhone size={52} color="#8C78C3" />
