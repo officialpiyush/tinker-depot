@@ -48,6 +48,18 @@ export default function UserCallPage() {
     }
   );
 
+  const closeRoomMutation = api.twilioRooms.stopRoom.useMutation();
+
+  const endCall = async () => {
+    await closeRoomMutation.mutateAsync({
+      roomId: roomData?.roomId || "",
+      talkingWith: userId as string,
+    });
+
+    void router.push("/");
+    return
+  };
+
   useEffect(() => {
     const interval = setInterval(() => {
       setNow(dayjs().format("HH:mm:s A"));
@@ -174,7 +186,7 @@ export default function UserCallPage() {
         </div>
 
         {/* call screen */}
-        <div className="flex-1 h-full w-full" id="remote-media-div">
+        <div className="h-full w-full flex-1" id="remote-media-div">
           <video className="h-full w-full" ref={videoRef} id="video"></video>
           {/* <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
             <div className="rounded-full bg-white p-6 ring-2 ring-black">
@@ -189,7 +201,10 @@ export default function UserCallPage() {
 
         <div className="flex w-full items-center justify-center">
           <div className="w-fit">
-            <button className="flex items-center gap-4 rounded-full bg-[#E84D4D] py-1 pl-1 pr-6 hover:bg-opacity-90">
+            <button
+              onClick={() => void endCall()}
+              className="flex items-center gap-4 rounded-full bg-[#E84D4D] py-1 pl-1 pr-6 hover:bg-opacity-90"
+            >
               <div className="rounded-full bg-[#512D2D] p-2">
                 <LucideVideo color="#E5BEBE" />
               </div>
