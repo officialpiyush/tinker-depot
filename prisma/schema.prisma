@@ -66,3 +66,10 @@ model VerificationToken {
 
     @@unique([identifier, token])
 }
+
+model Rooms {
+    id         String   @id @default(cuid())
+    firstUser  String
+    secondUser String
+    startedAt  DateTime @default(now())
+}
