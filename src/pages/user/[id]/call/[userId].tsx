@@ -67,7 +67,7 @@ export default function UserCallPage() {
   const connectToRoom = async () => {
     const localTracks = await createLocalTracks({
       audio: true,
-      video: { width: 640 },
+      video: true,
     });
 
     try {
@@ -101,8 +101,10 @@ export default function UserCallPage() {
 
             if (track.kind === "video") {
               console.log("video track", attached);
-              // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-non-null-assertion
-              videoRef.current!.src = attached.src;
+
+              attached.classList.add("h-full", "w-full");
+              // @ts-expect-error somethit
+              videoRef.current = attached;
             }
           }
         });
@@ -115,8 +117,10 @@ export default function UserCallPage() {
           console.log("attached duck subscription", attached);
           if (track.kind === "video") {
             console.log("video track", attached);
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-non-null-assertion
-            videoRef.current!.src = attached.src;
+
+            attached.classList.add("h-full", "w-full");
+            // @ts-expect-error somethit
+            videoRef.current = attached;
           }
         });
       });
