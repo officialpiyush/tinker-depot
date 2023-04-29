@@ -60,10 +60,14 @@ export default function UserCallPage() {
 
   const connectToRoom = async () => {
     try {
-      await connect(roomData?.token || "", {
+      const room = await connect(roomData?.token || "", {
         name: roomData?.roomId || "",
         audio: true,
         video: true,
+      });
+
+      room.on('participantConnected', participant => {
+        console.log(`Participant connected: ${participant.identity}`);
       });
     } catch (error) {
       console.log(`Unable to connect to Room`, error);
