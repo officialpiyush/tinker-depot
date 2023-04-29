@@ -4,7 +4,7 @@ import { api } from "~/utils/api";
 
 /* eslint-disable @next/next/no-img-element */
 export default function LoginPage() {
-  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [phoneNumber, setPhoneNumber] = useState<string>("+91");
   const [otp, setOtp] = useState<string>("");
   const [isOtpSent, setIsOtpSent] = useState(false);
 
@@ -58,6 +58,7 @@ export default function LoginPage() {
 
                 <div className="flex gap-2 text-white transition-all duration-700">
                   <input
+                  value={isOtpSent ? otp : phoneNumber}
                     onChange={(e) =>
                       isOtpSent
                         ? setOtp(e.currentTarget.value || "")
