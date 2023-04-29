@@ -93,6 +93,30 @@ export default function UserLivePage() {
             <div className="font-medium uppercase">Current Time</div>
           </div>
         </div>
+
+        <div className="flex w-full flex-col items-center gap-2 rounded-md bg-[#8C78C3] px-4 py-4 text-[#EDE6F4]">
+          {/* <div className="rounded-md bg-[#CABDD9] px-4 py-2 text-black">
+              00 : 00
+            </div> */}
+
+          <div className="text-xl font-bold uppercase">~</div>
+
+          <div className="font-medium uppercase">Hosted By</div>
+        </div>
+
+        <div className="flex flex-1 flex-col-reverse gap-4 rounded-md bg-[#A7CD4F] px-4 py-4 font-mono">
+          <div className="flx w-full justify-center">
+            <div className="flex justify-center rounded-md bg-[#8EB03F] px-8 py-2 text-center text-xl font-bold text-[#275548]">
+              NOTES
+            </div>
+          </div>
+          <div className="flex-1">
+            <textarea
+              placeholder="Your place to take some notes"
+              className="h-full w-full resize-none rounded-md bg-[#A7CD4F] p-2 placeholder-zinc-600 focus:outline-none"
+            ></textarea>
+          </div>
+        </div>
       </div>
     </div>
   );
