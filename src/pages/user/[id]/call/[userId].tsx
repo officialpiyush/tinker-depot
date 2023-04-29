@@ -95,7 +95,9 @@ export default function UserCallPage() {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call
             // @ts-expect-error somethit
             // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-            const attached: HTMLVide = track.attach();
+            const attached: HTMLVideoElement = track.attach();
+
+            console.log("attached duck all tracks", attached);
 
             if (track.kind === "video") {
               console.log("video track", attached);
@@ -109,8 +111,8 @@ export default function UserCallPage() {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call
           // @ts-expect-error somethit
           // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-          const attached: HTMLVide = track.attach();
-
+          const attached: HTMLVideoElement = track.attach();
+          console.log("attached duck subscription", attached);
           if (track.kind === "video") {
             console.log("video track", attached);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-non-null-assertion
