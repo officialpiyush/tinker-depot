@@ -37,6 +37,9 @@ dependencies:
   clsx:
     specifier: ^1.2.1
     version: 1.2.1
+  dayjs:
+    specifier: ^1.11.7
+    version: 1.11.7
   lucide-react:
     specifier: ^0.187.0
     version: 0.187.0(react@18.2.0)
