@@ -67,7 +67,9 @@ export default function UserCallPage() {
   const connectToRoom = async () => {
     const localTracks = await createLocalTracks({
       audio: true,
-      video: true,
+      video: {
+        width: 640,
+      },
     });
 
     try {
@@ -100,11 +102,9 @@ export default function UserCallPage() {
             console.log("attached duck all tracks", attached);
 
             if (track.kind === "video") {
-              console.log("video track", attached);
-
-              attached.classList.add("h-full", "w-full");
-              // @ts-expect-error somethit
-              videoRef.current = attached;
+              const videoElement = document.getElementById("video");
+              // @ts-expect-error video element dom error
+              track.attach(videoElement);
             }
           }
         });
@@ -116,11 +116,9 @@ export default function UserCallPage() {
           const attached: HTMLVideoElement = track.attach();
           console.log("attached duck subscription", attached);
           if (track.kind === "video") {
-            console.log("video track", attached);
-
-            attached.classList.add("h-full", "w-full");
-            // @ts-expect-error somethit
-            videoRef.current = attached;
+            const videoElement = document.getElementById("video");
+            // @ts-expect-error video element dom error
+            track.attach(videoElement);
           }
         });
       });
@@ -161,7 +159,7 @@ export default function UserCallPage() {
 
         {/* call screen */}
         <div className="flex-1" id="remote-media-div">
-          <video className="h-full w-full" ref={videoRef}></video>
+          <video className="h-full w-full" ref={videoRef} id="video"></video>
           {/* <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
             <div className="rounded-full bg-white p-6 ring-2 ring-black">
               <LucidePhone size={52} color="#8C78C3" />
