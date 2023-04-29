@@ -98,6 +98,7 @@ export default function UserCallPage() {
             const attached: HTMLVide = track.attach();
 
             if (track.kind === "video") {
+              console.log("video track", attached);
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-non-null-assertion
               videoRef.current!.src = attached.src;
             }
@@ -111,6 +112,7 @@ export default function UserCallPage() {
           const attached: HTMLVide = track.attach();
 
           if (track.kind === "video") {
+            console.log("video track", attached);
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-non-null-assertion
             videoRef.current!.src = attached.src;
           }
