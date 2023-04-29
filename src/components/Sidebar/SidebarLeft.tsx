@@ -40,7 +40,7 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="flex h-full flex-col items-center gap-8 p-8">
+    <div className="flex h-full flex-col items-center gap-8 py-8">
       <div>
         <div className="h-16 w-16 rounded-full bg-[#EDAE59]" />
       </div>
