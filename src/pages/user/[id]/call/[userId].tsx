@@ -22,9 +22,23 @@ export default function UserCallPage() {
 
   const { id, userId } = router.query;
 
-  const { data, error } = api.users.getNameFromId.useQuery({
-    userId: userId as string,
-  });
+  const { data: userData, error } = api.users.getNameFromId.useQuery(
+    {
+      userId: userId as string,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { data: roomData } = api.rooms.getRoomId.useQuery(
+    {
+      talkingWith: userId as string,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -33,6 +47,12 @@ export default function UserCallPage() {
 
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    if (roomData) {
+      console.log(roomData);
+    }
+  }, [roomData]);
 
   useEffect(() => {
     console.log(session);
@@ -105,7 +125,7 @@ export default function UserCallPage() {
             </div> */}
 
           <div className="text-xl font-bold">
-            {error ? "Error" : data?.userName ?? "Loading..."}
+            {error ? "Error" : userData?.userName ?? "Loading..."}
           </div>
 
           <div className="font-medium uppercase">Talking with</div>
