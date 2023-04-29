@@ -12,24 +12,28 @@ const Home: NextPage = () => {
       image: "/dashboard/tshirt.png",
       imageClassName: "h-96 w-96 object-cover",
       className: undefined,
+      titleBg: "#973A4A",
     },
     {
       title: "Let’s talk about this DIY workflow...",
       image: "/dashboard/tape.png",
       imageClassName: "h-96",
       className: undefined,
+      titleBg: "#275548",
     },
     {
       title: "Easy guide to make aesthetic blah",
       image: "/dashboard/cutting.png",
       imageClassName: "w-90",
       className: undefined,
+      titleBg: "#714F2E",
     },
     {
       title: "Getting started with IoT",
       image: "/dashboard/iot.png",
       imageClassName: "w-72 h-full object-cover",
       className: undefined,
+      titleBg: "#4D6B70",
     },
   ];
 
@@ -79,6 +83,7 @@ const Home: NextPage = () => {
               image={card.image}
               className={card.className}
               imageClassName={card.imageClassName}
+              titleBg={card.titleBg}
             />
           ))}
         </div>
