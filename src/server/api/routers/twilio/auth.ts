@@ -8,11 +8,12 @@ import { env } from "~/env.mjs";
 const twilioClient = new Twilio();
 
 export const twilioAuthRouter = createTRPCRouter({
-  hello: publicProcedure
+  sendOTP: publicProcedure
     .input(
       z.object({ phoneNumber: z.string().refine(validator.isMobilePhone) })
     )
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
+      console.log("input", input);
       const { phoneNumber } = input;
       const verificationService = await twilioClient.verify.v2
         .services(env.TWILIO_SERVICE_SID)
@@ -23,14 +24,14 @@ export const twilioAuthRouter = createTRPCRouter({
       };
     }),
 
-  verify: publicProcedure
+  verifyOTP: publicProcedure
     .input(
       z.object({
         phoneNumber: z.string().refine(validator.isMobilePhone),
         verificationCode: z.string(),
       })
     )
-    .query(async ({ input }) => {
+    .mutation(async ({ input }) => {
       const { phoneNumber, verificationCode } = input;
       const verificationCheck = await twilioClient.verify.v2
         .services(env.TWILIO_SERVICE_SID)
