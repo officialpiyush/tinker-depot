@@ -80,9 +80,7 @@ export const twilioRoomsRouter = createTRPCRouter({
         }
       );
 
-      const videoGrant = new VideoGrant({
-        room: id,
-      });
+      const videoGrant = new VideoGrant();
 
       token.addGrant(videoGrant);
 
