@@ -13,27 +13,27 @@ export default function Sidebar() {
   const LinksAndIcons = [
     {
       name: "Home",
-      icon: <Home className="" size="25" />,
+      icon: <Home className="" color="black" size="25" />,
       link: "/",
     },
     {
       name: "Live",
-      icon: <Youtube className="" size="25" />,
+      icon: <Youtube className="" color="black" size="25" />,
       link: "/live",
     },
     {
       name: "Query",
-      icon: <LucideHelpCircle className="" size="25" />,
+      icon: <LucideHelpCircle className="" color="black" size="25" />,
       link: "/query",
     },
     {
       name: "Creator Hub",
-      icon: <LucideUsers className="" size="25" />,
+      icon: <LucideUsers className="" color="black" size="25" />,
       link: "/creator",
     },
     {
       name: "Project Chat",
-      icon: <LucideMessagesSquare className="" size="25" />,
+      icon: <LucideMessagesSquare className="" color="black" size="25" />,
       link: "/project-chat",
     },
   ];
@@ -60,7 +60,7 @@ export default function Sidebar() {
             className="rounded-full px-2 py-2 hover:bg-red-700/20"
             onClick={() => void signOut()}
           >
-            <LucideLogOut />
+            <LucideLogOut color="black" />
           </button>
         </div>
       </div>
