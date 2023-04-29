@@ -4,6 +4,7 @@ import { z } from "zod";
 import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
 import { env } from "~/env.mjs";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import { nanoid } from "nanoid";
 
 const twilioClient = new Twilio();
 
@@ -75,7 +76,7 @@ export const twilioRoomsRouter = createTRPCRouter({
         env.TWILIO_API_SID,
         env.TWILIO_API_SECRET,
         {
-          identity: userId,
+          identity: userId + nanoid(),
         }
       );
 
