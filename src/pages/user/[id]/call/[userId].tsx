@@ -174,7 +174,7 @@ export default function UserCallPage() {
         </div>
 
         {/* call screen */}
-        <div className="flex-1" id="remote-media-div">
+        <div className="flex-1 h-full w-full" id="remote-media-div">
           <video className="h-full w-full" ref={videoRef} id="video"></video>
           {/* <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
             <div className="rounded-full bg-white p-6 ring-2 ring-black">
