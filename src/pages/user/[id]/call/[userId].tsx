@@ -61,7 +61,7 @@ export default function UserCallPage() {
   const connectToRoom = async () => {
     try {
       await connect(roomData?.token || "", {
-        name: userData?.userName,
+        name: roomData?.roomId || "",
         audio: true,
         video: true,
       });
