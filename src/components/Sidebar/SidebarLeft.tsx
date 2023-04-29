@@ -13,27 +13,27 @@ export default function Sidebar() {
   const LinksAndIcons = [
     {
       name: "Home",
-      icon: <Home className="" size="30" />,
+      icon: <Home className="" size="25" />,
       link: "/",
     },
     {
       name: "Live",
-      icon: <Youtube className="" size="30" />,
+      icon: <Youtube className="" size="25" />,
       link: "/live",
     },
     {
       name: "Query",
-      icon: <LucideHelpCircle className="" size="30" />,
+      icon: <LucideHelpCircle className="" size="25" />,
       link: "/query",
     },
     {
       name: "Creator Hub",
-      icon: <LucideUsers className="" size="30" />,
+      icon: <LucideUsers className="" size="25" />,
       link: "/creator",
     },
     {
       name: "Project Chat",
-      icon: <LucideMessagesSquare className="" size="30" />,
+      icon: <LucideMessagesSquare className="" size="25" />,
       link: "/project-chat",
     },
   ];
@@ -41,13 +41,13 @@ export default function Sidebar() {
   return (
     <div className="flex h-full flex-col items-center gap-8 p-8">
       <div>
-        <div className="h-20 w-20 rounded-full bg-[#EDAE59]" />
+        <div className="h-16 w-16 rounded-full bg-[#EDAE59]" />
       </div>
 
       <div className="flex h-full flex-col items-center gap-6 rounded-full bg-[#EDAE59] px-3 py-6">
         {LinksAndIcons.map((link) => (
           <Link
-            className="rounded-full px-3 py-3 hover:bg-zinc-700/20"
+            className="rounded-full px-2 py-2 hover:bg-zinc-700/20"
             key={link.link}
             href={link.link}
           >
@@ -57,7 +57,7 @@ export default function Sidebar() {
 
         <div className=" mt-auto">
           <button
-            className="rounded-full px-3 py-3 hover:bg-red-700/20"
+            className="rounded-full px-2 py-2 hover:bg-red-700/20"
             onClick={() => void signOut()}
           >
             <LucideLogOut />
