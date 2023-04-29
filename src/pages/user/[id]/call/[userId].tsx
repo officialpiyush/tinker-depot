@@ -4,7 +4,11 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
 import { useEffect, useState } from "react";
-import { connect } from "twilio-video";
+import {
+  connect,
+  createLocalTracks,
+  createLocalVideoTrack,
+} from "twilio-video";
 import Topic from "~/components/Topic";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
@@ -64,11 +68,20 @@ export default function UserCallPage() {
   }, [roomData]);
 
   const connectToRoom = async () => {
+    const localVideoTrack = await createLocalVideoTrack();
+
+    const localTracks = await createLocalTracks({
+      audio: true,
+      video: { width: 640 },
+    });
+
     try {
       const room = await connect(roomData?.token || "", {
         name: roomData?.roomId || "",
         audio: true,
         video: true,
+        tracks: localTracks,
+        logLevel: "debug",
       });
 
       room.on("participantConnected", (participant) => {
