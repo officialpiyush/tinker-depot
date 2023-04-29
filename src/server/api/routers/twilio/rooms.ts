@@ -5,7 +5,7 @@ import AccessToken, { VideoGrant } from "twilio/lib/jwt/AccessToken";
 import { env } from "~/env.mjs";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 
-const twilioClient = new Twilio(env.TWILIO_ACCOUNT_SID, env.TWILIO_AUTH_TOKEN);
+const twilioClient = new Twilio();
 
 export const twilioRoomsRouter = createTRPCRouter({
   getAccessTokenForRoom: protectedProcedure
@@ -72,8 +72,8 @@ export const twilioRoomsRouter = createTRPCRouter({
 
       const token = new AccessToken(
         env.TWILIO_ACCOUNT_SID,
-        env.TWILIO_SERVICE_SID,
-        env.TWILIO_AUTH_TOKEN,
+        env.TWILIO_API_SID,
+        env.TWILIO_API_SECRET,
         {
           identity: userId,
         }
