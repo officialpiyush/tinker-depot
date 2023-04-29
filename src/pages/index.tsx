@@ -1,10 +1,35 @@
 import { LucidePlus } from "lucide-react";
-import { type NextPage } from "next";
+import { type GetServerSideProps, type NextPage } from "next";
+import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect } from "react";
 import Card from "~/components/Card";
 import Chip from "~/components/Chip";
+import { getServerAuthSession } from "~/server/auth";
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  return {
+    props: { session },
+  };
+};
+
 const Home: NextPage = () => {
+  const router = useRouter();
+  const session = useSession();
+
+  useEffect(() => {
+    if (!session.data) {
+      console.log("no session");
+      void router.push("/login");
+      return;
+    }
+
+    console.log({ session });
+  }, [session]);
+
   const tags = ["computer-games", "electronics", "food", "origami"];
   const homePageCards = [
     {
