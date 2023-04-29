@@ -12,13 +12,13 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <div className="h-screen bg-[#2F2A3B]">
+      <div className="h-screen bg-[#2F2A3B] bg-[url('/dashboard-grid.svg')] bg-center">
         <main className="flex h-screen gap-12 py-4">
           <div className="flex h-full justify-center overflow-y-auto px-4">
             <SidebarLeft />
           </div>
 
-          <div className="h-full w-full flex-1 overflow-y-auto">
+          <div className="h-full w-full flex-1 py-8 overflow-y-auto">
             <Component {...pageProps} />
           </div>
 
