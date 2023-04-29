@@ -4,6 +4,7 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
 import { useEffect, useState } from "react";
+import { connect } from "twilio-video";
 import Topic from "~/components/Topic";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
@@ -32,14 +33,9 @@ export default function UserCallPage() {
     }
   );
 
-  const { data: roomData } = api.rooms.getRoomId.useQuery(
-    {
-      talkingWith: userId as string,
-    },
-    {
-      refetchOnWindowFocus: false,
-    }
-  );
+  const { data: roomData } = api.twilioRooms.getAccessTokenForRoom.useQuery({
+    talkingWith: userId as string,
+  });
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -52,13 +48,31 @@ export default function UserCallPage() {
   useEffect(() => {
     if (roomData) {
       const roomTimeInterval = setInterval(() => {
-        const elapsed = dayjs().diff(dayjs(roomData.startedAt), "second");
+        const elapsed = dayjs().diff(dayjs(roomData.startDate), "second");
         // convert seeconds to mm:ss
         const converted = `${Math.floor(elapsed / 60)}:${elapsed % 60}`;
         setTimeElapsed(converted);
       }, 1000);
 
       return () => clearInterval(roomTimeInterval);
+    }
+  }, [roomData]);
+
+  const connectToRoom = async () => {
+    try {
+      await connect(roomData?.token || "", {
+        name: userData?.userName,
+        audio: true,
+        video: true,
+      });
+    } catch (error) {
+      console.log(`Unable to connect to Room`, error);
+    }
+  };
+
+  useEffect(() => {
+    if (roomData) {
+      void connectToRoom();
     }
   }, [roomData]);
 
