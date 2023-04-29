@@ -2,7 +2,15 @@ import { LucidePlus } from "lucide-react";
 import { type NextPage } from "next";
 import Head from "next/head";
 import Link from "next/link";
+import Chip from "~/components/Chip";
 const Home: NextPage = () => {
+
+  const tags = [
+    "computer-games",
+    "electronics",
+    "food",
+    "origami"
+  ]
   return (
     <>
       <Head>
@@ -29,6 +37,15 @@ const Home: NextPage = () => {
               Your Projects
             </Link>
           </div>
+        </div>
+
+{/* tags | chips */}
+        <div className="flex gap-4">
+            {
+              tags.map((tag) => (
+                <Chip key={tag} title={tag} />
+              ))
+            }
         </div>
       </div>
     </>
