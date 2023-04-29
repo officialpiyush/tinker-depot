@@ -14,7 +14,7 @@ const Home: NextPage = () => {
         <div className="flex items-center gap-4">
           <input
             type="text"
-            className="rounded-full px-4 py-3 text-2xl w-1/2 focus:outline-none"
+            className="rounded-full px-4 py-3 text-xl w-1/2 focus:outline-none"
             placeholder="Search"
           />
 
