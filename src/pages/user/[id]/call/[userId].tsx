@@ -4,7 +4,12 @@ import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
 import { useEffect, useRef, useState } from "react";
-import { connect, createLocalTracks } from "twilio-video";
+import {
+  RemoteAudioTrack,
+  RemoteVideoTrack,
+  connect,
+  createLocalTracks,
+} from "twilio-video";
 import Topic from "~/components/Topic";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
@@ -64,6 +69,16 @@ export default function UserCallPage() {
     }
   }, [roomData]);
 
+  const attachTracks = (track: RemoteVideoTrack | RemoteAudioTrack) => {
+    if (track.kind === "video") {
+      const videoElement = document.getElementById("video");
+      // @ts-expect-error video element dom error
+      track.attach(videoElement);
+    } else if (track.kind === "audio") {
+      track.attach();
+    }
+  };
+
   const connectToRoom = async () => {
     const localTracks = await createLocalTracks({
       audio: true,
@@ -92,17 +107,8 @@ export default function UserCallPage() {
               return;
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            // @ts-expect-error somethit
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-            const attached: HTMLVideoElement = track.attach();
-
-            console.log("attached duck all tracks", attached);
-
-            if (track.kind === "video") {
-              const videoElement = document.getElementById("video");
-              // @ts-expect-error video element dom error
-              track.attach(videoElement);
+            if (track.kind === "video" || track.kind === "audio") {
+              attachTracks(track);
             }
           }
         });
@@ -120,31 +126,15 @@ export default function UserCallPage() {
               return;
             }
 
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-            // @ts-expect-error somethit
-            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-            const attached: HTMLVideoElement = track.attach();
-
-            console.log("attached duck all tracks", attached);
-
-            if (track.kind === "video") {
-              const videoElement = document.getElementById("video");
-              // @ts-expect-error video element dom error
-              track.attach(videoElement);
+            if (track.kind === "video" || track.kind === "audio") {
+              attachTracks(track);
             }
           }
         });
 
         participant.on("trackSubscribed", (track) => {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-          // @ts-expect-error somethit
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
-          const attached: HTMLVideoElement = track.attach();
-          console.log("attached duck subscription", attached);
-          if (track.kind === "video") {
-            const videoElement = document.getElementById("video");
-            // @ts-expect-error video element dom error
-            track.attach(videoElement);
+          if (track.kind === "video" || track.kind === "audio") {
+            attachTracks(track);
           }
         });
       });
