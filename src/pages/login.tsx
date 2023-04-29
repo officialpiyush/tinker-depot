@@ -1,7 +1,39 @@
-import { Phone } from "lucide-react";
+import { ArrowRight, Phone } from "lucide-react";
+import { useState } from "react";
+import { api } from "~/utils/api";
 
 /* eslint-disable @next/next/no-img-element */
 export default function LoginPage() {
+  const [phoneNumber, setPhoneNumber] = useState<string>("");
+  const [otp, setOtp] = useState<string>("");
+  const [isOtpSent, setIsOtpSent] = useState(false);
+
+  const generateOtpMutation = api.twilioAuth.sendOTP.useMutation();
+  const verifyOtpMutation = api.twilioAuth.verifyOTP.useMutation();
+
+  const handleLogin = async () => {
+    console.log("handleLogin");
+
+    console.log({ phoneNumber, otp });
+    if (isOtpSent) {
+      if (!otp) return;
+
+      const isVerified = await verifyOtpMutation.mutateAsync({
+        phoneNumber,
+        verificationCode: otp,
+      });
+
+      console.log(isVerified);
+    } else {
+      if (!phoneNumber) return;
+      setIsOtpSent(true);
+
+      // send otp
+      const otpID = await generateOtpMutation.mutateAsync({ phoneNumber });
+      console.log(otpID);
+    }
+  };
+
   return (
     <div className="absolute bottom-0 left-0 right-0 top-0 flex h-screen w-full bg-[#EDAE59] bg-[url(/dot_grid.png)] bg-right-bottom bg-no-repeat font-playfair">
       <div className="grid w-full grid-cols-12 gap-4">
@@ -19,14 +51,38 @@ export default function LoginPage() {
 
                 <div className="flex gap-2 text-white">
                   <input
+                    onChange={(e) =>
+                      isOtpSent
+                        ? setOtp(e.currentTarget.value || "")
+                        : setPhoneNumber(e.currentTarget.value || "")
+                    }
+                    onKeyDown={(e) =>
+                      isOtpSent
+                        ? setOtp(e.currentTarget.value || "")
+                        : setPhoneNumber(e.currentTarget.value || "")
+                    }
+                    onKeyUp={(e) =>
+                      isOtpSent
+                        ? setOtp(e.currentTarget.value || "")
+                        : setPhoneNumber(e.currentTarget.value || "")
+                    }
                     type="number"
                     className="rounded-md bg-[#9D5EE8] px-4 placeholder-white focus:outline-none focus:ring-0"
                     placeholder="Enter your phone number"
                   />
 
                   <div>
-                    <button className="flex items-center justify-center rounded-md bg-[#EDAE59] px-4 py-3">
-                      <Phone color="black" />
+                    <button
+                      onClick={() => {
+                        void handleLogin();
+                      }}
+                      className="flex items-center justify-center rounded-md bg-[#EDAE59] px-4 py-3"
+                    >
+                      {isOtpSent ? (
+                        <ArrowRight color="black" />
+                      ) : (
+                        <Phone color="black" />
+                      )}
                     </button>
                   </div>
                 </div>
