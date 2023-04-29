@@ -5,7 +5,6 @@ import { api } from "~/utils/api";
 
 import "~/styles/globals.css";
 import SidebarLeft from "~/components/Sidebar/SidebarLeft";
-import SidebarRight from "~/components/Sidebar/SidebarRight";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
