@@ -18,11 +18,8 @@ const MyApp: AppType<{ session: Session | null }> = ({
             <SidebarLeft />
           </div>
 
-          <div className="h-full w-full flex-1 py-8 overflow-y-auto">
+          <div className="h-full w-full flex-1 py-8 pr-8 overflow-y-auto">
             <Component {...pageProps} />
-          </div>
-
-          <div className="flex h-full justify-center overflow-y-auto px-4">
           </div>
         </main>
       </div>
