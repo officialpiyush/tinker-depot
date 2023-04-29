@@ -1,8 +1,9 @@
-import { LucideCamera, LucidePhone, LucideVideo } from "lucide-react";
+import dayjs from "dayjs";
+import { LucidePhone, LucideVideo } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Topic from "~/components/Topic";
 import { getServerAuthSession } from "~/server/auth";
 
@@ -16,6 +17,15 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 export default function UserLivePage() {
   const router = useRouter();
   const session = useSession();
+  const [now, setNow] = useState("00:00 GG");
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setNow(dayjs().format("HH:mm:s A"));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const { id } = router.query;
 
@@ -61,6 +71,26 @@ export default function UserLivePage() {
 
               <span>End Call</span>
             </button>
+          </div>
+        </div>
+      </div>
+
+      <div className="col-span-4 flex h-full flex-col gap-4">
+        <div className="flex w-full gap-2">
+          <div className="flex w-full flex-col items-center gap-2 rounded-md bg-[#8C78C3] px-4 py-4 text-[#EDE6F4]">
+            <div className="rounded-md bg-[#CABDD9] px-4 py-2 text-black">
+              00 : 00
+            </div>
+
+            <div className="font-medium uppercase">Ongoing Call</div>
+          </div>
+
+          <div className="flex w-full flex-col items-center gap-2 rounded-md bg-[#8C78C3] px-4 py-4 text-[#EDE6F4]">
+            <div className="rounded-md bg-[#CABDD9] px-4 py-2 text-black">
+              {now}
+            </div>
+
+            <div className="font-medium uppercase">Current Time</div>
           </div>
         </div>
       </div>
