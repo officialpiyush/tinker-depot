@@ -1,12 +1,28 @@
 import { ArrowRight, Phone } from "lucide-react";
-import { useState } from "react";
+import type { GetServerSideProps } from "next";
+import { signIn, useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
+import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await getServerAuthSession(ctx);
+  return {
+    props: { session },
+  };
+};
 
 /* eslint-disable @next/next/no-img-element */
 export default function LoginPage() {
   const [phoneNumber, setPhoneNumber] = useState<string>("+91");
   const [otp, setOtp] = useState<string>("");
   const [isOtpSent, setIsOtpSent] = useState(false);
+
+  const { data: session } = useSession();
+
+  useEffect(() => {
+    console.log(session);
+  }, [session]);
 
   const generateOtpMutation = api.twilioAuth.sendOTP.useMutation();
   const verifyOtpMutation = api.twilioAuth.verifyOTP.useMutation();
@@ -47,56 +63,65 @@ export default function LoginPage() {
         <div className="border-2xl col-span-3 justify-between rounded-tr-3xl bg-[#45259A]">
           <div className="flex h-full flex-col">
             <div className="flex flex-1 flex-col items-center justify-center">
-              <div className="flex flex-col items-center justify-center gap-8">
-                <div>
-                  <img
-                    className="h-20 rounded-full ring-4 ring-white"
-                    src="/PattaGobhi.png"
-                    alt="patta"
-                  />
-                </div>
-
-                <div className="flex gap-2 text-white transition-all duration-700">
-                  <input
-                    value={isOtpSent ? otp : phoneNumber}
-                    onChange={(e) =>
-                      isOtpSent
-                        ? setOtp(e.currentTarget.value || "")
-                        : setPhoneNumber(e.currentTarget.value || "")
-                    }
-                    onKeyDown={(e) =>
-                      isOtpSent
-                        ? setOtp(e.currentTarget.value || "")
-                        : setPhoneNumber(e.currentTarget.value || "")
-                    }
-                    onKeyUp={(e) =>
-                      isOtpSent
-                        ? setOtp(e.currentTarget.value || "")
-                        : setPhoneNumber(e.currentTarget.value || "")
-                    }
-                    type="number"
-                    className="rounded-md bg-[#9D5EE8] px-4 placeholder-white transition-all duration-700 focus:outline-none focus:ring-0"
-                    placeholder={
-                      isOtpSent ? "Enter OTP" : "Enter your phone number"
-                    }
-                  />
-
+              {session ? (
+                <div className="flex flex-col items-center justify-center gap-8">
                   <div>
-                    <button
-                      onClick={() => {
-                        void handleLogin();
-                      }}
-                      className="flex items-center justify-center rounded-md bg-[#EDAE59] px-4 py-3 transition-all duration-700"
-                    >
-                      {isOtpSent ? (
-                        <ArrowRight color="black" />
-                      ) : (
-                        <Phone color="black" />
-                      )}
-                    </button>
+                    <img
+                      className="h-20 rounded-full ring-4 ring-white"
+                      src="/PattaGobhi.png"
+                      alt="patta"
+                    />
+                  </div>
+
+                  <div className="flex gap-2 text-white transition-all duration-700">
+                    <input
+                      value={isOtpSent ? otp : phoneNumber}
+                      onChange={(e) =>
+                        isOtpSent
+                          ? setOtp(e.currentTarget.value || "")
+                          : setPhoneNumber(e.currentTarget.value || "")
+                      }
+                      onKeyDown={(e) =>
+                        isOtpSent
+                          ? setOtp(e.currentTarget.value || "")
+                          : setPhoneNumber(e.currentTarget.value || "")
+                      }
+                      onKeyUp={(e) =>
+                        isOtpSent
+                          ? setOtp(e.currentTarget.value || "")
+                          : setPhoneNumber(e.currentTarget.value || "")
+                      }
+                      type="number"
+                      className="rounded-md bg-[#9D5EE8] px-4 placeholder-white transition-all duration-700 focus:outline-none focus:ring-0"
+                      placeholder={
+                        isOtpSent ? "Enter OTP" : "Enter your phone number"
+                      }
+                    />
+
+                    <div>
+                      <button
+                        onClick={() => {
+                          void handleLogin();
+                        }}
+                        className="flex items-center justify-center rounded-md bg-[#EDAE59] px-4 py-3 transition-all duration-700"
+                      >
+                        {isOtpSent ? (
+                          <ArrowRight color="black" />
+                        ) : (
+                          <Phone color="black" />
+                        )}
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <button
+                  onClick={() => void signIn("discord")}
+                  className="rounded bg-[#EDAE59] px-8 py-2 text-black"
+                >
+                  Login
+                </button>
+              )}
             </div>
 
             <div className="rounded-tr-3xl bg-[#240C64] px-6 py-12 text-3xl font-bold leading-none tracking-wide text-[#EDAE59]">
