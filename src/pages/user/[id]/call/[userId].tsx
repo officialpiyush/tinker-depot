@@ -82,6 +82,32 @@ export default function UserCallPage() {
         logLevel: "debug",
       });
 
+      room.participants.forEach((participant) => {
+        participant.tracks.forEach((publication) => {
+          if (publication.isSubscribed) {
+            const track = publication.track;
+
+            if (!track) {
+              console.log("No track");
+              return;
+            }
+
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+            // @ts-expect-error somethit
+            // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-assignment
+            const attached: HTMLVideoElement = track.attach();
+
+            console.log("attached duck all tracks", attached);
+
+            if (track.kind === "video") {
+              const videoElement = document.getElementById("video");
+              // @ts-expect-error video element dom error
+              track.attach(videoElement);
+            }
+          }
+        });
+      });
+
       room.on("participantConnected", (participant) => {
         console.log(`Participant connected: ${participant.identity}`);
 
