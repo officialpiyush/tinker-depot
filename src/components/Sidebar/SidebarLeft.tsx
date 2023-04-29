@@ -8,6 +8,7 @@ import {
 } from "lucide-react";
 import { signOut } from "next-auth/react";
 import Link from "next/link";
+import { cn } from "~/lib/utils";
 
 export default function Sidebar() {
   const LinksAndIcons = [
@@ -47,7 +48,7 @@ export default function Sidebar() {
       <div className="flex h-full flex-col items-center gap-6 rounded-full bg-[#EDAE59] px-3 py-6">
         {LinksAndIcons.map((link) => (
           <Link
-            className="rounded-full px-2 py-2 hover:bg-zinc-700/20"
+            className={cn("rounded-full px-2 py-2 hover:bg-zinc-700/20")}
             key={link.link}
             href={link.link}
           >
