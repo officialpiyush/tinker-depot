@@ -90,4 +90,42 @@ export const twilioRoomsRouter = createTRPCRouter({
         startDate,
       };
     }),
+
+  stopRoom: protectedProcedure
+    .input(z.object({ roomId: z.string(), talkingWith: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      const { roomId, talkingWith } = input;
+      const { id: userId } = ctx.session.user;
+
+      const room = await ctx.prisma.rooms.findFirst({
+        where: {
+          id: roomId,
+        },
+      });
+
+      if (!room) {
+        throw new Error("Room not found");
+      }
+
+      const { firstUser, secondUser } = room;
+      if (firstUser !== userId && secondUser !== userId) {
+        throw new Error("User not in room");
+      }
+
+      if (secondUser !== talkingWith && firstUser !== talkingWith) {
+        throw new Error("User not in room");
+      }
+
+      await twilioClient.video.v1.rooms(roomId).update({
+        status: "completed",
+      });
+
+      await ctx.prisma.rooms.delete({
+        where: {
+          id: roomId,
+        },
+      });
+
+      return true;
+    }),
 });
