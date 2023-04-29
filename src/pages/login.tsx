@@ -91,7 +91,6 @@ export default function LoginPage() {
                             ? setOtp(e.currentTarget.value || "")
                             : setPhoneNumber(e.currentTarget.value || "")
                         }
-                        type="number"
                         className="rounded-md bg-[#9D5EE8] px-4 placeholder-white transition-all duration-700 focus:outline-none focus:ring-0"
                         placeholder={
                           isOtpSent ? "Enter OTP" : "Enter your phone number"
