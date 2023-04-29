@@ -8,9 +8,9 @@ export default function LoginPage() {
         <div className="col-span-6">.</div>
       </div>
 
-      <div className="absolute right-0 top-0 p-24">
+      <div className="absolute right-0 top-0 p-12">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="h-52" src="/squares.svg" alt="squares" />
+        <img className=" h-80" src="/squares.svg" alt="squares" />
       </div>
     </div>
   );
