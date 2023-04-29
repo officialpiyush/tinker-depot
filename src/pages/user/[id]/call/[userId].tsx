@@ -76,6 +76,7 @@ export default function UserCallPage() {
     });
 
     try {
+      console.log("token", roomData?.token);
       const room = await connect(roomData?.token || "", {
         name: roomData?.roomId || "",
         audio: true,
