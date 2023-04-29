@@ -10,7 +10,7 @@ export default function LoginPage() {
 
       <div className="absolute right-0 top-0 p-12">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className=" h-80" src="/squares.svg" alt="squares" />
+        <img className=" h-96" src="/squares.svg" alt="squares" />
       </div>
     </div>
   );
