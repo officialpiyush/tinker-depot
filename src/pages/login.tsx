@@ -1,6 +1,7 @@
 import { ArrowRight, Phone } from "lucide-react";
 import type { GetServerSideProps } from "next";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { getServerAuthSession } from "~/server/auth";
 import { api } from "~/utils/api";
@@ -14,6 +15,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 /* eslint-disable @next/next/no-img-element */
 export default function LoginPage() {
+  const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState<string>("+91");
   const [otp, setOtp] = useState<string>("");
   const [isOtpSent, setIsOtpSent] = useState(false);
@@ -40,7 +42,7 @@ export default function LoginPage() {
       });
 
       if (isVerified.status === "approved") {
-        alert("Login success");
+        void router.push("/");
       } else {
         alert("Login failed");
       }
