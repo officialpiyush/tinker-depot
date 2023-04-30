@@ -40,6 +40,7 @@ const Home: NextPage = () => {
       imageClassName: "object-cover",
       className: "col-span-6",
       titleBg: "#973A4A",
+      href: "/projects/cutting",
     },
     {
       title: "Let’s talk about this DIY workflow...",
@@ -47,6 +48,7 @@ const Home: NextPage = () => {
       imageClassName: "h-96",
       className: "col-span-6",
       titleBg: "#275548",
+      href: "/projects/cutting",
     },
     {
       title: "Easy guide to make aesthetic postcards~",
@@ -54,6 +56,7 @@ const Home: NextPage = () => {
       imageClassName: "w-96",
       className: "col-span-4",
       titleBg: "#714F2E",
+      href: "/projects/cutting",
     },
     {
       title: "Getting started with IoT",
@@ -61,6 +64,7 @@ const Home: NextPage = () => {
       imageClassName: "w-96 h-full object-cover",
       className: "col-span-8",
       titleBg: "#4D6B70",
+      href: "/projects/cutting",
     },
   ];
 
@@ -127,13 +131,14 @@ const Home: NextPage = () => {
 
           <div className="grid h-full w-full grid-cols-12 gap-4">
             {homePageCards.map((card) => (
-              <Card
-                key={card.image}
-                title={card.title}
-                image={card.image}
-                className={card.className}
-                titlebg={card.titleBg}
-              />
+              <Link key={card.image} href={card.href}>
+                <Card
+                  title={card.title}
+                  image={card.image}
+                  className={card.className}
+                  titlebg={card.titleBg}
+                />
+              </Link>
             ))}
           </div>
         </div>
@@ -171,7 +176,7 @@ const Home: NextPage = () => {
               ChatRoom
             </span>
 
-            <div className="flex w-full flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-zinc-600 scrollbar-track-gray-100 px-4">
+            <div className="flex w-full flex-col gap-4 overflow-y-auto px-4 scrollbar-thin scrollbar-track-gray-100 scrollbar-thumb-zinc-600 scrollbar-track-rounded scrollbar-thumb-rounded">
               {messages?.messages.map((message) => (
                 <ChatBubble
                   className="w-full"
