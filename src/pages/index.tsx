@@ -1,13 +1,15 @@
-import { LucidePlus } from "lucide-react";
+import { LucidePlus, LucideSend } from "lucide-react";
 import { type GetServerSideProps, type NextPage } from "next";
 import { useSession } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Card from "~/components/Card";
+import ChatBubble from "~/components/ChatBubble";
 import Chip from "~/components/Chip";
 import { getServerAuthSession } from "~/server/auth";
+import { api } from "~/utils/api";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerAuthSession(ctx);
@@ -62,6 +64,28 @@ const Home: NextPage = () => {
     },
   ];
 
+  const [message, setMessage] = useState("");
+  const { data: messages, refetch: refetchMessages } =
+    api.chats.getMessages.useQuery({
+      room: "general",
+    });
+  const sendMessageMutation = api.chats.storeChat.useMutation();
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      void refetchMessages();
+    }, 10_000);
+
+    return () => clearInterval(interval);
+  }, [refetchMessages]);
+
+  const sendMessage = async () => {
+    await sendMessageMutation.mutateAsync({
+      room: "general",
+      message,
+    });
+  };
+
   return (
     <>
       <Head>
@@ -108,8 +132,7 @@ const Home: NextPage = () => {
                 title={card.title}
                 image={card.image}
                 className={card.className}
-                imageClassName={card.imageClassName}
-                titleBg={card.titleBg}
+                titlebg={card.titleBg}
               />
             ))}
           </div>
@@ -143,10 +166,39 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div className="flex h-full w-96 justify-center rounded-xl bg-[#8C78C3] py-2 text-[#D8CFEF]">
-            <span className="scroll-m-20 text-center text-2xl font-medium transition-colors first:mt-0">
+          <div className="flex h-full w-96 flex-col items-center overflow-y-auto rounded-xl bg-[#8C78C3] py-2 text-[#D8CFEF]">
+            <span className="scroll-m-20 text-center text-2xl font-medium transition-colors first:mt-0 pb-2">
               ChatRoom
             </span>
+
+            <div className="flex flex-col gap-4 overflow-y-auto w-full px-4">
+              {messages?.messages.map((message) => (
+                <ChatBubble
+                  className="w-full"
+                  key={message.id}
+                  user={message.user.name as string}
+                  message={message.message}
+                />
+              ))}
+            </div>
+
+            <div className="flex w-full gap-2 border-t-2 border-black px-8 pb-2 pt-4">
+              <input
+                onKeyDown={(e) => void setMessage(e.currentTarget.value)}
+                onKeyUp={(e) => void setMessage(e.currentTarget.value)}
+                onChange={(e) => void setMessage(e.currentTarget.value)}
+                className="w-full rounded-full px-4 py-2 text-black"
+                type="text"
+                placeholder="Enter message"
+              />
+
+              <button
+                onClick={() => void sendMessage()}
+                className="rounded-full border-2 p-2"
+              >
+                <LucideSend size={24} />
+              </button>
+            </div>
           </div>
         </div>
       </div>

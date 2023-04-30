@@ -5,7 +5,7 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 export const chatRouter = createTRPCRouter({
   storeChat: protectedProcedure
     .input(z.object({ room: z.string(), message: z.string() }))
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
       const { room, message } = input;
 
       const userId = ctx.session.user.id;
@@ -33,6 +33,7 @@ export const chatRouter = createTRPCRouter({
           roomId: room,
         },
         select: {
+          id: true,
           message: true,
           user: {
             select: {
@@ -41,6 +42,9 @@ export const chatRouter = createTRPCRouter({
             },
           },
         },
+        orderBy: {
+          sentAt: "desc",
+        }
       });
 
       return {
