@@ -28,7 +28,7 @@ const Home: NextPage = () => {
     }
 
     console.log({ session });
-  }, [session]);
+  }, [session, router]);
 
   const tags = ["computer-games", "electronics", "food", "origami"];
   const homePageCards = [
