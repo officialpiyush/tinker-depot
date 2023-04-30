@@ -40,7 +40,7 @@ const Home: NextPage = () => {
       imageClassName: "object-cover",
       className: "col-span-6",
       titleBg: "#973A4A",
-      href: "/projects/cutting",
+      href: "/project/cutting",
     },
     {
       title: "Let’s talk about this DIY workflow...",
@@ -48,7 +48,7 @@ const Home: NextPage = () => {
       imageClassName: "h-96",
       className: "col-span-6",
       titleBg: "#275548",
-      href: "/projects/cutting",
+      href: "/project/cutting",
     },
     {
       title: "Easy guide to make aesthetic postcards~",
@@ -56,7 +56,7 @@ const Home: NextPage = () => {
       imageClassName: "w-96",
       className: "col-span-4",
       titleBg: "#714F2E",
-      href: "/projects/cutting",
+      href: "/project/cutting",
     },
     {
       title: "Getting started with IoT",
@@ -64,7 +64,7 @@ const Home: NextPage = () => {
       imageClassName: "w-96 h-full object-cover",
       className: "col-span-8",
       titleBg: "#4D6B70",
-      href: "/projects/cutting",
+      href: "/project/cutting",
     },
   ];
 
