@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { createEnv } from "@t3-oss/env-nextjs";
+import validator from "validator";
 
 export const env = createEnv({
   server: {
@@ -10,6 +11,7 @@ export const env = createEnv({
     TWILIO_SERVICE_SID: z.string().min(1),
     TWILIO_API_SID: z.string().min(1),
     TWILIO_API_SECRET: z.string().min(1),
+    TWILIO_PHONE_NUMBER: z.string().min(1).refine(validator.isMobilePhone),
     NEXTAUTH_SECRET:
       process.env.NODE_ENV === "production"
         ? z.string().min(1)
@@ -31,6 +33,7 @@ export const env = createEnv({
     TWILIO_SERVICE_SID: process.env.TWILIO_SERVICE_SID,
     TWILIO_API_SID: process.env.TWILIO_API_SID,
     TWILIO_API_SECRET: process.env.TWILIO_API_SECRET,
+    TWILIO_PHONE_NUMBER: process.env.TWILIO_PHONE_NUMBER,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
