@@ -5,10 +5,11 @@ import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
 import { useEffect, useRef, useState } from "react";
 import {
-  type RemoteAudioTrack,
-  type RemoteVideoTrack,
   connect,
   createLocalTracks,
+  type RemoteAudioTrack,
+  type RemoteTrackPublication,
+  type RemoteVideoTrack
 } from "twilio-video";
 import Topic from "~/components/Topic";
 import { getServerAuthSession } from "~/server/auth";
@@ -57,7 +58,7 @@ export default function UserCallPage() {
     });
 
     void router.push("/");
-    return
+    return;
   };
 
   useEffect(() => {
@@ -91,6 +92,32 @@ export default function UserCallPage() {
     }
   };
 
+  function subscribed(track: RemoteAudioTrack | RemoteVideoTrack) {
+    console.log({ track });
+    console.log("Subscribed to RemoteTrack:", track.sid);
+    attachTracks(track);
+    //Code for starting track rendering goes here.
+  }
+
+  function unsubscribed(track) {
+    console.log("Unsubscribed to RemoteTrack:", track.sid);
+    //Code for stopping track rendering goes here.
+  }
+
+  function subscriptionFailed(error, publication) {
+    console.log(
+      "Failed to subscribe to RemoteTrack ${publication.trackSid}:",
+      error
+    );
+    //Code for managing subscribe errors goes here.
+  }
+
+  function listenToSubscriptionEvents(publication: RemoteTrackPublication) {
+    publication.on("subscribed", subscribed);
+    publication.on("unsubscribed", unsubscribed);
+    publication.on("subscriptionFailed", subscriptionFailed);
+  }
+
   const connectToRoom = async () => {
     const localTracks = await createLocalTracks({
       audio: true,
@@ -106,10 +133,39 @@ export default function UserCallPage() {
         audio: true,
         video: true,
         tracks: localTracks,
-        logLevel: "debug",
       });
 
       room.participants.forEach((participant) => {
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          return;
+
+        participant.tracks.forEach(listenToSubscriptionEvents);
+        room.on("trackPublished", listenToSubscriptionEvents);
+      });
+
+      room.on("participantConnected", (participant) => {
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          participant.tracks.forEach(listenToSubscriptionEvents);
+        room.on("trackPublished", listenToSubscriptionEvents);
+      });
+
+      room.participants.forEach((participant) => {
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          return;
+
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          return;
+
+        console.log("SomeOne Else: ", participant.identity);
+
+        participant.dataTracks.forEach((publication) => {
+          console.log({ publication });
+        });
+
+        participant.videoTracks.forEach((publication) => {
+          console.log({ vT: publication });
+        });
+
         participant.tracks.forEach((publication) => {
           if (publication.isSubscribed) {
             const track = publication.track;
@@ -128,6 +184,8 @@ export default function UserCallPage() {
 
       room.on("participantConnected", (participant) => {
         console.log(`Participant connected: ${participant.identity}`);
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          return;
 
         participant.tracks.forEach((publication) => {
           if (publication.isSubscribed) {
@@ -163,7 +221,7 @@ export default function UserCallPage() {
     if (roomData) {
       void connectToRoom();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomData]);
 
   useEffect(() => {
