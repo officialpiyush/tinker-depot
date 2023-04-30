@@ -1,11 +1,20 @@
 import dayjs from "dayjs";
-import { LucidePhone, LucideVideo } from "lucide-react";
+import { LucideLoader, LucidePhone, LucideVideo } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import {
+  connect,
+  createLocalTracks,
+  type RemoteTrack,
+  type RemoteAudioTrack,
+  type RemoteTrackPublication,
+  type RemoteVideoTrack,
+} from "twilio-video";
 import Topic from "~/components/Topic";
 import { getServerAuthSession } from "~/server/auth";
+import { api } from "~/utils/api";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerAuthSession(ctx);
@@ -14,10 +23,48 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-export default function UserLivePage() {
+export default function UserCallPage() {
   const router = useRouter();
   const session = useSession();
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isAloneOnCall, setIsAloneOnCall] = useState(true);
   const [now, setNow] = useState("00:00 GG");
+  const [timeElapsed, setTimeElapsed] = useState("00:00");
+  const [notes, setNotes] = useState("");
+
+  const userId = "clh1tcefc0000l908gmskxaej";
+
+  const { data: userData, error } = api.users.getNameFromId.useQuery(
+    {
+      userId: userId as string,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const { data: roomData } = api.twilioRooms.getAccessTokenForRoom.useQuery(
+    {
+      talkingWith: userId as string,
+    },
+    {
+      refetchOnWindowFocus: false,
+    }
+  );
+
+  const closeRoomMutation = api.twilioRooms.stopRoom.useMutation();
+
+  const endCall = async () => {
+    console.log(notes);
+    await closeRoomMutation.mutateAsync({
+      roomId: roomData?.roomId || "",
+      talkingWith: userId as string,
+      notes,
+    });
+
+    void router.push("/");
+    return;
+  };
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -27,7 +74,205 @@ export default function UserLivePage() {
     return () => clearInterval(interval);
   }, []);
 
-  // const { id } = router.query;
+  useEffect(() => {
+    if (roomData) {
+      const roomTimeInterval = setInterval(() => {
+        const elapsed = dayjs().diff(dayjs(roomData.startDate), "second");
+        // convert seeconds to mm:ss
+        const converted = `${Math.floor(elapsed / 60)}:${elapsed % 60}`;
+        setTimeElapsed(converted);
+      }, 1000);
+
+      return () => clearInterval(roomTimeInterval);
+    }
+  }, [roomData]);
+
+  const attachTracks = (track: RemoteVideoTrack | RemoteAudioTrack) => {
+    if (track.kind === "video") {
+      const videoElement = document.getElementById("video");
+      // @ts-expect-error video element dom error
+      track.attach(videoElement);
+    } else if (track.kind === "audio") {
+      track.attach();
+    }
+  };
+
+  function subscribed(track: RemoteTrack) {
+    console.log({ track });
+    console.log("Subscribed to RemoteTrack:", track.sid);
+
+    if (track.kind === "video" || track.kind === "audio") {
+      attachTracks(track);
+    }
+
+    //Code for starting track rendering goes here.
+  }
+
+  function unsubscribed(track: RemoteTrack) {
+    console.log("Unsubscribed to RemoteTrack:", track.sid);
+    //Code for stopping track rendering goes here.
+  }
+
+  function subscriptionFailed(
+    error: unknown,
+    publication: RemoteTrackPublication
+  ) {
+    console.log(
+      `Failed to subscribe to RemoteTrack ${publication.trackSid}:`,
+      error
+    );
+    //Code for managing subscribe errors goes here.
+  }
+
+  function listenToSubscriptionEvents(publication: RemoteTrackPublication) {
+    publication.on("subscribed", subscribed);
+    publication.on("unsubscribed", unsubscribed);
+    publication.on("subscriptionFailed", subscriptionFailed);
+  }
+
+  const connectToRoom = async () => {
+    const localTracks = await createLocalTracks({
+      audio: true,
+      video: {
+        width: 640,
+      },
+    });
+
+    let peopleCount = 0;
+
+    try {
+      console.log("token", roomData?.token);
+      const room = await connect(roomData?.token || "", {
+        name: roomData?.roomId || "",
+        audio: true,
+        video: true,
+        tracks: localTracks,
+      });
+
+      peopleCount = 0;
+      room.participants.forEach((participant) => {
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          return;
+
+        peopleCount++;
+      });
+
+      if (peopleCount > 0) {
+        setIsAloneOnCall(false);
+      } else {
+        setIsAloneOnCall(true);
+      }
+
+      room.participants.forEach((participant) => {
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          return;
+
+        participant.tracks.forEach(listenToSubscriptionEvents);
+      });
+
+      room.on("trackPublished", listenToSubscriptionEvents);
+
+      room.on("participantConnected", (participant) => {
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          participant.tracks.forEach(listenToSubscriptionEvents);
+
+        setIsAloneOnCall(false);
+      });
+
+      room.participants.forEach((participant) => {
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          return;
+
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          return;
+
+        console.log("SomeOne Else: ", participant.identity);
+
+        participant.dataTracks.forEach((publication) => {
+          console.log({ publication });
+        });
+
+        participant.videoTracks.forEach((publication) => {
+          console.log({ vT: publication });
+        });
+
+        participant.tracks.forEach((publication) => {
+          if (publication.isSubscribed) {
+            const track = publication.track;
+
+            if (!track) {
+              console.log("No track");
+              return;
+            }
+
+            if (track.kind === "video" || track.kind === "audio") {
+              attachTracks(track);
+            }
+          }
+        });
+      });
+
+      room.on("participantConnected", (participant) => {
+        console.log(`Participant connected: ${participant.identity}`);
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          return;
+
+        setIsAloneOnCall(false);
+
+        participant.tracks.forEach((publication) => {
+          if (publication.isSubscribed) {
+            const track = publication.track;
+
+            if (!track) {
+              console.log("No track");
+              return;
+            }
+
+            if (track.kind === "video" || track.kind === "audio") {
+              attachTracks(track);
+            }
+          }
+        });
+
+        participant.on("trackSubscribed", (track) => {
+          if (track.kind === "video" || track.kind === "audio") {
+            attachTracks(track);
+          }
+        });
+      });
+
+      room.on("participantDisconnected", (participant) => {
+        console.log(`Participant disconnected: ${participant.identity}`);
+
+        peopleCount = 0;
+        room.participants.forEach((participant) => {
+          if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+            return;
+
+          peopleCount++;
+        });
+
+        if (peopleCount > 0) {
+          setIsAloneOnCall(false);
+        } else {
+          setIsAloneOnCall(true);
+        }
+      });
+
+      room.on("disconnected", () => {
+        void router.push("/");
+      });
+    } catch (error) {
+      console.log(`Unable to connect to Room`, error);
+    }
+  };
+
+  useEffect(() => {
+    if (roomData) {
+      void connectToRoom();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [roomData]);
 
   useEffect(() => {
     if (!session.data) {
@@ -49,21 +294,40 @@ export default function UserLivePage() {
         </div>
 
         {/* call screen */}
-        <div className="flex-1">
-          <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
+        <div className="h-full w-full flex-1" id="remote-media-div">
+          {isAloneOnCall ? (
+            <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
+              <div className="rounded-full bg-white p-6 ring-2 ring-black">
+                <LucideLoader
+                  className="animate-spin"
+                  size={52}
+                  color="#8C78C3"
+                />
+              </div>
+
+              <span>Waiting for stream to connect</span>
+            </div>
+          ) : (
+            <video className="h-full w-full" ref={videoRef} id="video"></video>
+          )}
+
+          {/* <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
             <div className="rounded-full bg-white p-6 ring-2 ring-black">
               <LucidePhone size={52} color="#8C78C3" />
             </div>
 
             <span>Start a Call</span>
-          </div>
+          </div> */}
         </div>
 
         <Topic title="ESP8266" />
 
         <div className="flex w-full items-center justify-center">
           <div className="w-fit">
-            <button className="flex items-center gap-4 rounded-full bg-[#E84D4D] py-1 pl-1 pr-6 hover:bg-opacity-90">
+            <button
+              onClick={() => void endCall()}
+              className="flex items-center gap-4 rounded-full bg-[#E84D4D] py-1 pl-1 pr-6 hover:bg-opacity-90"
+            >
               <div className="rounded-full bg-[#512D2D] p-2">
                 <LucideVideo color="#E5BEBE" />
               </div>
@@ -78,7 +342,7 @@ export default function UserLivePage() {
         <div className="flex w-full gap-2">
           <div className="flex w-full flex-col items-center gap-2 rounded-md bg-[#8C78C3] px-4 py-4 text-[#EDE6F4]">
             <div className="rounded-md bg-[#CABDD9] px-4 py-2 text-black">
-              00 : 00
+              {timeElapsed}
             </div>
 
             <div className="font-medium uppercase">Ongoing Call</div>
@@ -98,7 +362,9 @@ export default function UserLivePage() {
               00 : 00
             </div> */}
 
-          <div className="text-xl font-bold uppercase">~</div>
+          <div className="text-xl font-bold">
+            {error ? "Error" : userData?.userName ?? "Loading..."}
+          </div>
 
           <div className="font-medium uppercase">Hosted By</div>
         </div>
@@ -111,6 +377,9 @@ export default function UserLivePage() {
           </div>
           <div className="flex-1">
             <textarea
+              onKeyDown={(e) => setNotes(e.currentTarget.value)}
+              onKeyUp={(e) => setNotes(e.currentTarget.value)}
+              onChange={(e) => setNotes(e.currentTarget.value)}
               placeholder="Your place to take some notes"
               className="h-full w-full resize-none rounded-md bg-[#A7CD4F] p-2 placeholder-zinc-600 focus:outline-none"
             ></textarea>
