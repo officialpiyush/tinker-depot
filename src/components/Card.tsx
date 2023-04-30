@@ -10,14 +10,16 @@ interface HomeCardProps extends React.HTMLAttributes<HTMLDivElement> {
 
 export default function HomeCard(props: HomeCardProps) {
   return (
-    <div {...props} className={cn("relative rounded-xl", props.className)}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        className={cn("rounded-xl", props.imageClassName)}
-        src={props.image}
-        alt={props.title}
-      />
-
+    <div
+      style={{
+        backgroundImage: `url(${props.image})`,
+      }}
+      {...props}
+      className={cn(
+        "relative h-full w-full rounded-xl bg-cover bg-center bg-no-repeat",
+        props.className
+      )}
+    >
       <div
         style={{
           backgroundColor: props.titleBg,

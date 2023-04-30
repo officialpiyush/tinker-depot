@@ -35,29 +35,29 @@ const Home: NextPage = () => {
     {
       title: "How to paint on T-Shirts",
       image: "/dashboard/tshirt.png",
-      imageClassName: "h-96 w-96 object-cover",
-      className: undefined,
+      imageClassName: "object-cover",
+      className: "col-span-6",
       titleBg: "#973A4A",
     },
     {
       title: "Let’s talk about this DIY workflow...",
       image: "/dashboard/tape.png",
       imageClassName: "h-96",
-      className: undefined,
+      className: "col-span-6",
       titleBg: "#275548",
     },
     {
-      title: "Easy guide to make aesthetic blah",
+      title: "Easy guide to make aesthetic postcards~",
       image: "/dashboard/cutting.png",
       imageClassName: "w-96",
-      className: undefined,
+      className: "col-span-4",
       titleBg: "#714F2E",
     },
     {
       title: "Getting started with IoT",
       image: "/dashboard/iot.png",
       imageClassName: "w-96 h-full object-cover",
-      className: undefined,
+      className: "col-span-8",
       titleBg: "#4D6B70",
     },
   ];
@@ -69,8 +69,8 @@ const Home: NextPage = () => {
         <meta name="description" content="DiY ya stuff" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="flex gap-4">
-        <div className="flex flex-col gap-4">
+      <div className="h-full w-full flex gap-4">
+        <div className="flex-1 flex flex-col gap-4">
           <div className="flex items-center gap-4">
             <input
               type="text"
@@ -101,7 +101,7 @@ const Home: NextPage = () => {
             ))}
           </div>
 
-          <div className="flex flex-wrap gap-8">
+          <div className="w-full h-full grid grid-cols-12 gap-4">
             {homePageCards.map((card) => (
               <Card
                 key={card.image}
@@ -116,9 +116,15 @@ const Home: NextPage = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="min-h-1/2 flex h-5/6 w-64 justify-center rounded-xl bg-[#8C78C3] py-2 text-[#D8CFEF]">
+          <div className="h-full flex w-96 justify-center rounded-xl bg-[#8C78C3] py-2 text-[#D8CFEF]">
             <span className="scroll-m-20 text-center text-2xl font-medium transition-colors first:mt-0">
               Trending
+            </span>
+          </div>
+
+          <div className="h-full flex w-96 justify-center rounded-xl bg-[#8C78C3] py-2 text-[#D8CFEF]">
+            <span className="scroll-m-20 text-center text-2xl font-medium transition-colors first:mt-0">
+              ChatRoom
             </span>
           </div>
         </div>
