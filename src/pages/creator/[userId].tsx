@@ -51,7 +51,7 @@ export default function CreatorPage() {
 
           {/* banner image */}
           <div className="relative h-full w-full flex-1 rounded-xl bg-[url(/dashboard/iot.png)]">
-            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center bg-[#4D6B70] py-3 text-white gap-3">
+            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center gap-3 bg-[#4D6B70] py-3 text-white">
               <div className="rounded-full p-1 ring-2 ring-white">
                 <LucideUser color="white" />
               </div>
@@ -84,7 +84,27 @@ export default function CreatorPage() {
         </div>
       </div>
 
-      <div className="col-span-4"></div>
+      {/* right sidebar */}
+      <div className="col-span-4 h-full ">
+        <div className="flex h-full flex-col justify-between gap-4">
+          {/* profile */}
+          <div className="flex flex-col items-center gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="block h-52 w-52 rounded-full ring-4 ring-white"
+              src="/profile.png"
+              alt=""
+            />
+
+            <div className="mx-4 my-2 bg-[#D9D9D9] px-4 py-2 rounded-md text-center">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              Consequuntur, maiores nam nisi, sit reiciendis quis rerum enim
+              earum et tempora ut ipsum? Ducimus iste quod laboriosam, rem quo
+              eligendi dolore.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }
