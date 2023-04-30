@@ -14,7 +14,7 @@ export default function Chip(props: ChipProps) {
         props.className
       )}
     >
-      #{props.title}
+      {props.title}
     </div>
   );
 }

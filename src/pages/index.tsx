@@ -97,7 +97,7 @@ const Home: NextPage = () => {
           {/* tags | chips */}
           <div className="flex gap-4">
             {tags.map((tag) => (
-              <Chip key={tag} title={tag} />
+              <Chip key={tag} title={`#${tag}`} />
             ))}
           </div>
 
