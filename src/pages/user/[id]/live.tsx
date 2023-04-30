@@ -1,5 +1,9 @@
 import dayjs from "dayjs";
-import { LucideLoader, LucidePhone, LucideVideo } from "lucide-react";
+import {
+  LucideLoader,
+  LucideRadio,
+  LucideVideo
+} from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
@@ -7,8 +11,8 @@ import { useEffect, useRef, useState } from "react";
 import {
   connect,
   createLocalTracks,
-  type RemoteTrack,
   type RemoteAudioTrack,
+  type RemoteTrack,
   type RemoteTrackPublication,
   type RemoteVideoTrack,
 } from "twilio-video";
@@ -287,10 +291,10 @@ export default function UserCallPage() {
       <div className="col-span-8 flex h-full flex-col gap-4">
         <div className="flex w-fit items-center gap-2 rounded-3xl rounded-bl-none bg-[#D9D9D9] py-2 pl-2 pr-4">
           <div className="rounded-full bg-[#714F4F] p-2">
-            <LucidePhone size={20} color="#D5B8B8" />
+            <LucideRadio size={20} color="#D5B8B8" />
           </div>
 
-          <span className="text-md">Calling Screen</span>
+          <span className="text-md">Live Stream</span>
         </div>
 
         {/* call screen */}
@@ -332,7 +336,7 @@ export default function UserCallPage() {
                 <LucideVideo color="#E5BEBE" />
               </div>
 
-              <span>End Call</span>
+              <span>Disconnect</span>
             </button>
           </div>
         </div>
@@ -345,7 +349,7 @@ export default function UserCallPage() {
               {timeElapsed}
             </div>
 
-            <div className="font-medium uppercase">Ongoing Call</div>
+            <div className="font-medium uppercase">Time Elapsed</div>
           </div>
 
           <div className="flex w-full flex-col items-center gap-2 rounded-md bg-[#8C78C3] px-4 py-4 text-[#EDE6F4]">
