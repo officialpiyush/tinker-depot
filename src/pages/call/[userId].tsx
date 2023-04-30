@@ -167,8 +167,7 @@ export default function UserCallPage() {
   }, [roomData]);
 
   useEffect(() => {
-    console.log(session);
-    if (!session) {
+    if (!session.data) {
       void router.push("/login");
       return;
     }

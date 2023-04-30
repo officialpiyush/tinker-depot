@@ -30,8 +30,7 @@ export default function UserLivePage() {
   const { id } = router.query;
 
   useEffect(() => {
-    console.log(session);
-    if (!session) {
+    if (!session.data) {
       void router.push("/login");
       return;
     }
