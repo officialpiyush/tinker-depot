@@ -30,7 +30,7 @@ export default function QueryRoom() {
               Query
               <textarea
                 className="h-full w-full rounded-xl bg-[#a7cd4f] px-4 pt-4 focus:outline-none text-black placeholder-zinc-500"
-                placeholder="Write queries here do you don't forget in the conversation"
+                placeholder="Write queries here so you don't forget in the conversation"
               ></textarea>
             </div>
           </div>
