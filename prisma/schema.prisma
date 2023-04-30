@@ -59,6 +59,7 @@ model User {
     sessions       Session[]
     Creator        Creator?  @relation(fields: [creatorId], references: [id])
     creatorId      String?
+    Chats          Chats[]
 
     @@index([creatorId])
 }
@@ -84,4 +85,14 @@ model Creator {
     updatedAt DateTime @updatedAt
     available Boolean  @default(false)
     users     User[]
+}
+
+model Chats {
+    id      String @id @default(cuid())
+    roomId  String 
+    userId  String
+    user    User   @relation(fields: [userId], references: [id])
+    message String
+
+    @@index([userId])
 }
