@@ -121,7 +121,9 @@ export default function CreatorPage() {
                 <LucideUser color="white" />
               </div>
 
-              <div className="text[#D9D9D9]">Ricky Abdominoa</div>
+              <div className="text[#D9D9D9]">
+                {session.data?.user.name || "Ghost"}
+              </div>
             </div>
           </div>
 
@@ -156,16 +158,19 @@ export default function CreatorPage() {
           <div className="flex flex-col items-center gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              className="block h-52 w-52 rounded-full ring-4 ring-white"
-              src="/profile.png"
+              className="block h-52 w-52 rounded-full object-cover ring-4 ring-white"
+              src="/neko.jpeg"
               alt=""
             />
 
             <div className="mx-4 my-2 rounded-md bg-[#D9D9D9] px-4 py-2 text-center">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
-              Consequuntur, maiores nam nisi, sit reiciendis quis rerum enim
-              earum et tempora ut ipsum? Ducimus iste quod laboriosam, rem quo
-              eligendi dolore.
+              Hi there! My name is {session.data?.user.name} and I'm a hobbyist
+              who loves exploring new activities in my free time. I'm always on
+              the lookout for new hobbies to try and I enjoy challenging myself
+              to learn new skills. One of my favorite hobbies is tinkering with
+              IoT devices, which I've been doing for the past few years. I love
+              [doing it as it keeps my brain fresh, and it's an excellent way
+              for me to unwind and destress after a busy day.
             </div>
           </div>
 
