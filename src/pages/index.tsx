@@ -69,8 +69,8 @@ const Home: NextPage = () => {
         <meta name="description" content="DiY ya stuff" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div className="h-full w-full flex gap-4">
-        <div className="flex-1 flex flex-col gap-4">
+      <div className="flex h-full w-full gap-4">
+        <div className="flex flex-1 flex-col gap-4">
           <div className="flex items-center gap-4">
             <input
               type="text"
@@ -101,7 +101,7 @@ const Home: NextPage = () => {
             ))}
           </div>
 
-          <div className="w-full h-full grid grid-cols-12 gap-4">
+          <div className="grid h-full w-full grid-cols-12 gap-4">
             {homePageCards.map((card) => (
               <Card
                 key={card.image}
@@ -116,13 +116,34 @@ const Home: NextPage = () => {
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="h-full flex w-96 justify-center rounded-xl bg-[#8C78C3] py-2 text-[#D8CFEF]">
-            <span className="scroll-m-20 text-center text-2xl font-medium transition-colors first:mt-0">
+          <div className="flex h-full w-96 flex-col items-center rounded-xl bg-[#8C78C3] pb-2 pt-4 text-[#D8CFEF]">
+            <span className="w-full scroll-m-20 text-center text-xl font-medium transition-colors first:mt-0">
               Trending
             </span>
+
+            <div className="flex w-full flex-col gap-4 px-4 pt-4">
+              {[
+                "Sowing a chibi Yae Miko Genshin plushie [ for beginners ]",
+                "3 ingredient strawberry mochi recipe [ for beginners <3 ]",
+                "Blender 3D modelling a living room [ Intermediate ]",
+                "Swapping MX switches on a mechanical keyboard [ Intermediate ]",
+                "How to survive in JSPM [ Veteran ]",
+              ].map((title) => (
+                <Link
+                  key={title}
+                  href="/trending"
+                  className="text-black hover:underline"
+                >
+                  <Chip
+                    title={title}
+                    className="w-full truncate rounded-md bg-[#cabdd9] py-2 text-black"
+                  />
+                </Link>
+              ))}
+            </div>
           </div>
 
-          <div className="h-full flex w-96 justify-center rounded-xl bg-[#8C78C3] py-2 text-[#D8CFEF]">
+          <div className="flex h-full w-96 justify-center rounded-xl bg-[#8C78C3] py-2 text-[#D8CFEF]">
             <span className="scroll-m-20 text-center text-2xl font-medium transition-colors first:mt-0">
               ChatRoom
             </span>
