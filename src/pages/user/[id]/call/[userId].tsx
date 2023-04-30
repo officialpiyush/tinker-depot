@@ -5,8 +5,8 @@ import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
 import { useEffect, useRef, useState } from "react";
 import {
-  RemoteAudioTrack,
-  RemoteVideoTrack,
+  type RemoteAudioTrack,
+  type RemoteVideoTrack,
   connect,
   createLocalTracks,
 } from "twilio-video";
@@ -163,6 +163,7 @@ export default function UserCallPage() {
     if (roomData) {
       void connectToRoom();
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomData]);
 
   useEffect(() => {
@@ -171,7 +172,7 @@ export default function UserCallPage() {
       void router.push("/login");
       return;
     }
-  }, [session, router]);
+  }, [session, router, id]);
 
   return (
     <div className="grid h-full grid-cols-12 gap-4">
