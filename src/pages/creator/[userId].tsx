@@ -1,5 +1,6 @@
 import {
   LucideCheckCircle,
+  LucideCoins,
   LucideMail,
   LucideMessageSquare,
   LucidePersonStanding,
@@ -26,6 +27,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 export default function CreatorPage() {
   const session = useSession();
   const router = useRouter();
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [creatorAvailable, setCreatorAvailable] = useState(false);
 
   useEffect(() => {
@@ -115,15 +117,23 @@ export default function CreatorPage() {
           </div>
 
           {/* contact icons */}
-          <div className="flex">
-            <div className="w-full">Donate</div>
+          <div className="flex gap-4">
+            <div className="flex h-full w-full flex-col items-center justify-center gap-4 rounded-xl bg-[#EDAE59]">
+              <div className="rounded-full border border-black p-4">
+                <LucideCoins size={42} color="#623D0B" />
+              </div>
+
+              <button className="rounded-full bg-[#B76F0E] px-12 py-2">
+                Support
+              </button>
+            </div>
 
             <div className="flex w-full flex-col items-center gap-4 rounded-xl bg-[#8C78C3]">
               <div className="flex gap-2 px-4  pt-4 text-[#E7E1F6]">
                 <LucideMail size={20} color="white" />
                 SMS when available
               </div>
-              <div className="flex w-full flex-col gap-4 rounded-xl bg-[#A7CD4F] px-4 py-4 text-sm font-medium">
+              <div className="flex w-full flex-col gap-6 rounded-xl bg-[#A7CD4F] px-4 py-6 text-sm font-medium">
                 <div className="flex items-center justify-between gap-2">
                   <LucideMessageSquare size={20} color="black" />
                   <div>Whatsapp</div>
