@@ -7,9 +7,10 @@ import { useEffect, useRef, useState } from "react";
 import {
   connect,
   createLocalTracks,
+  RemoteTrack,
   type RemoteAudioTrack,
   type RemoteTrackPublication,
-  type RemoteVideoTrack
+  type RemoteVideoTrack,
 } from "twilio-video";
 import Topic from "~/components/Topic";
 import { getServerAuthSession } from "~/server/auth";
@@ -92,21 +93,28 @@ export default function UserCallPage() {
     }
   };
 
-  function subscribed(track: RemoteAudioTrack | RemoteVideoTrack) {
+  function subscribed(track: RemoteTrack) {
     console.log({ track });
     console.log("Subscribed to RemoteTrack:", track.sid);
-    attachTracks(track);
+
+    if (track.kind === "video" || track.kind === "audio") {
+      attachTracks(track);
+    }
+
     //Code for starting track rendering goes here.
   }
 
-  function unsubscribed(track) {
+  function unsubscribed(track: RemoteTrack) {
     console.log("Unsubscribed to RemoteTrack:", track.sid);
     //Code for stopping track rendering goes here.
   }
 
-  function subscriptionFailed(error, publication) {
+  function subscriptionFailed(
+    error: unknown,
+    publication: RemoteTrackPublication
+  ) {
     console.log(
-      "Failed to subscribe to RemoteTrack ${publication.trackSid}:",
+      `Failed to subscribe to RemoteTrack ${publication.trackSid}:`,
       error
     );
     //Code for managing subscribe errors goes here.
