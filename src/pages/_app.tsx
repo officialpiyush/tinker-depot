@@ -6,6 +6,7 @@ import NextNProgress from "nextjs-progressbar";
 
 import "~/styles/globals.css";
 import SidebarLeft from "~/components/Sidebar/SidebarLeft";
+import Head from "next/head";
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -13,6 +14,12 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
+      <Head>
+        <title>DiY</title>
+        <meta name="description" content="DiY ya stuff" />
+        <link rel="icon" href="/logo/orange.png" />
+      </Head>
+
       <NextNProgress />
       <div className="h-screen bg-[#2F2A3B] bg-[url('/dashboard-grid.svg')] bg-center">
         <main className="flex h-screen gap-2 py-4">
