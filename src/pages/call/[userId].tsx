@@ -28,7 +28,7 @@ export default function UserCallPage() {
   const [now, setNow] = useState("00:00 GG");
   const [timeElapsed, setTimeElapsed] = useState("00:00");
 
-  const { id, userId } = router.query;
+  const { userId } = router.query;
 
   const { data: userData, error } = api.users.getNameFromId.useQuery(
     {
@@ -168,11 +168,11 @@ export default function UserCallPage() {
 
   useEffect(() => {
     console.log(session);
-    if (!session || session.data?.user.id !== id) {
+    if (!session) {
       void router.push("/login");
       return;
     }
-  }, [session, router, id]);
+  }, [session, router]);
 
   return (
     <div className="grid h-full grid-cols-12 gap-4">
