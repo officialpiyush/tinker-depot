@@ -131,7 +131,7 @@ const Home: NextPage = () => {
 
           <div className="grid h-full w-full grid-cols-12 gap-4">
             {homePageCards.map((card) => (
-              <Link key={card.image} href={card.href}>
+              <Link className={card.className} key={card.image} href={card.href}>
                 <Card
                   title={card.title}
                   image={card.image}
