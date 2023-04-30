@@ -92,9 +92,9 @@ export const twilioRoomsRouter = createTRPCRouter({
     }),
 
   stopRoom: protectedProcedure
-    .input(z.object({ roomId: z.string(), talkingWith: z.string() }))
+    .input(z.object({ roomId: z.string(), talkingWith: z.string(), notes: z.string().optional() }))
     .mutation(async ({ input, ctx }) => {
-      const { roomId, talkingWith } = input;
+      const { roomId, talkingWith, notes } = input;
       const { id: userId } = ctx.session.user;
 
       const room = await ctx.prisma.rooms.findFirst({
@@ -125,6 +125,24 @@ export const twilioRoomsRouter = createTRPCRouter({
           id: roomId,
         },
       });
+
+      if(notes && notes.length) {
+        const userData = await ctx.prisma.user.findUnique({
+          where: {
+            id: userId
+          },
+          select: {
+            name: true,
+            mobileNumber: true
+          }
+        })
+  
+        await twilioClient.messages.create({
+          body: `Hello ${userData?.name || "User"} o/\nYour notes for the room ${roomId}: \n\n${notes}\n\n <3 TinkerDepot`,
+          from: env.TWILIO_PHONE_NUMBER,
+          to: userData?.mobileNumber || ""
+        })
+      }
 
       return true;
     }),
