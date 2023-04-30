@@ -16,6 +16,7 @@ import type { GetServerSideProps } from "next/types";
 import { useEffect, useState } from "react";
 import Chip from "~/components/Chip";
 import { getServerAuthSession } from "~/server/auth";
+import { api } from "~/utils/api";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getServerAuthSession(ctx);
@@ -29,6 +30,12 @@ export default function CreatorPage() {
   const router = useRouter();
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [creatorAvailable, setCreatorAvailable] = useState(false);
+
+  const { userId } = router.query;
+
+  const { data: creatorData } = api.creators.getCreator.useQuery({
+    userId: userId as string,
+  });
 
   useEffect(() => {
     if (!session.data) {
@@ -55,8 +62,10 @@ export default function CreatorPage() {
             {/* status indicator */}
             <div className="flex w-fit items-center gap-2 rounded-md bg-[#8C78C3] px-2 py-1 text-sm text-white">
               Status
-              <div className="rounded-md bg-[#EDAE59] px-2 py-1 text-xs text-black">
-                Unavailable
+              <div style={{
+                backgroundColor: creatorData?.available ? "#A7CD4F" : "#EDAE59",
+              }} className="rounded-md px-2 py-1 text-xs text-black">
+                {creatorData?.available ? "Available" : "Unavailable"}
               </div>
             </div>
           </div>
