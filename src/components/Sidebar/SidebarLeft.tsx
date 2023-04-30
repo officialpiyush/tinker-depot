@@ -3,6 +3,7 @@ import {
   LucideHelpCircle,
   LucideLogOut,
   LucideMessagesSquare,
+  LucideRat,
   LucideUsers,
   Youtube,
 } from "lucide-react";
@@ -40,9 +41,11 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="flex h-full flex-col items-center gap-8 py-8">
-      <div>
-        <div className="h-16 w-16 rounded-full bg-[#EDAE59]" />
+    <div className="flex h-full flex-col  justify-center gap-8 py-8">
+      <div className="flex items-center justify-center rounded-full bg-[#EDAE59] p-5">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {/* <img className="h-16 w-16 rounded-full ring-[#a7cd4f] ring-4 ring-white" src="/logo/purple.png" alt="logo" /> */}
+        <LucideRat />
       </div>
 
       <div className="flex h-full flex-col items-center gap-6 rounded-full bg-[#EDAE59] px-3 py-6">
