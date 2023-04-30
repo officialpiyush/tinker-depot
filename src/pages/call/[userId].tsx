@@ -258,6 +258,10 @@ export default function UserCallPage() {
           setIsAloneOnCall(true);
         }
       });
+
+      room.on("disconnected", () => {
+        void router.push("/");
+      });
     } catch (error) {
       console.log(`Unable to connect to Room`, error);
     }
