@@ -62,9 +62,14 @@ export default function CreatorPage() {
             {/* status indicator */}
             <div className="flex w-fit items-center gap-2 rounded-md bg-[#8C78C3] px-2 py-1 text-sm text-white">
               Status
-              <div style={{
-                backgroundColor: creatorData?.available ? "#A7CD4F" : "#EDAE59",
-              }} className="rounded-md px-2 py-1 text-xs text-black">
+              <div
+                style={{
+                  backgroundColor: creatorData?.available
+                    ? "#A7CD4F"
+                    : "#EDAE59",
+                }}
+                className="rounded-md px-2 py-1 text-xs text-black"
+              >
                 {creatorData?.available ? "Available" : "Unavailable"}
               </div>
             </div>
@@ -153,25 +158,29 @@ export default function CreatorPage() {
                   )}
                 </div>
 
-                <div className="flex items-center justify-between gap-2">
-                  <LucideVideo size={20} color="black" />
-                  <div>Video Call</div>
-                  {creatorAvailable ? (
-                    <LucideCheckCircle size={20} color="#56672E" />
-                  ) : (
-                    <LucideXCircle size={20} color="#56672E" />
-                  )}
-                </div>
+                <Link href={`/call/${session.data?.user.id || "ghost"}`}>
+                  <div className="flex items-center justify-between gap-2 hover:underline">
+                    <LucideVideo size={20} color="black" />
+                    <div>Video Call</div>
+                    {creatorAvailable ? (
+                      <LucideCheckCircle size={20} color="#56672E" />
+                    ) : (
+                      <LucideXCircle size={20} color="#56672E" />
+                    )}
+                  </div>
+                </Link>
 
-                <div className="flex items-center justify-between gap-2">
-                  <LucidePhone size={20} color="black" />
-                  <div>Voice Call</div>
-                  {creatorAvailable ? (
-                    <LucideCheckCircle size={20} color="#56672E" />
-                  ) : (
-                    <LucideXCircle size={20} color="#56672E" />
-                  )}
-                </div>
+                <Link href={`/call/${session.data?.user.id || "ghost"}`}>
+                  <div className="flex items-center justify-between gap-2 hover:underline">
+                    <LucidePhone size={20} color="black" />
+                    <div>Voice Call</div>
+                    {creatorAvailable ? (
+                      <LucideCheckCircle size={20} color="#56672E" />
+                    ) : (
+                      <LucideXCircle size={20} color="#56672E" />
+                    )}
+                  </div>
+                </Link>
               </div>
             </div>
           </div>
