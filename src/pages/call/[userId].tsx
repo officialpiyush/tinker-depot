@@ -7,7 +7,7 @@ import { useEffect, useRef, useState } from "react";
 import {
   connect,
   createLocalTracks,
-  RemoteTrack,
+  type RemoteTrack,
   type RemoteAudioTrack,
   type RemoteTrackPublication,
   type RemoteVideoTrack,
