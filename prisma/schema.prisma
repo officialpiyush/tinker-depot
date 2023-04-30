@@ -88,11 +88,12 @@ model Creator {
 }
 
 model Chats {
-    id      String @id @default(cuid())
-    roomId  String 
+    id      String   @id @default(cuid())
+    roomId  String
     userId  String
-    user    User   @relation(fields: [userId], references: [id])
+    user    User     @relation(fields: [userId], references: [id])
     message String
+    sentAt  DateTime @default(now())
 
     @@index([userId])
 }
