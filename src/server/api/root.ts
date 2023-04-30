@@ -4,6 +4,7 @@ import { twilioAuthRouter } from "./routers/twilio/auth";
 import { usersRouter } from "./routers/users";
 import { roomsRouter } from "./routers/rooms";
 import { twilioRoomsRouter } from "./routers/twilio/rooms";
+import { creatorsRouter } from "./routers/creators";
 
 /**
  * This is the primary router for your server.
@@ -14,6 +15,7 @@ export const appRouter = createTRPCRouter({
   example: exampleRouter,
   users: usersRouter,
   rooms: roomsRouter,
+  creators: creatorsRouter,
   twilioAuth: twilioAuthRouter,
   twilioRooms: twilioRoomsRouter,
 });
