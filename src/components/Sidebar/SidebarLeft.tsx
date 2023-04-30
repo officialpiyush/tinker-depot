@@ -34,9 +34,9 @@ export default function Sidebar() {
       link: "/creator",
     },
     {
-      name: "Project Chat",
+      name: "Community Hub",
       icon: <LucideMessagesSquare className="" color="black" size="25" />,
-      link: "/project-chat",
+      link: "/community-hub",
     },
   ];
 
