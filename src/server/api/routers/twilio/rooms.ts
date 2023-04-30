@@ -66,6 +66,40 @@ export const twilioRoomsRouter = createTRPCRouter({
             uniqueName: id,
             type: "group",
           });
+
+          const firstUserName = await ctx.prisma.user.findUnique({
+            where: {
+              id: userId,
+            },
+            select: {
+              name: true,
+              mobileNumber: true
+            },
+          });
+
+          const secondUsername = await ctx.prisma.user.findUnique({
+            where: {
+              id: talkingWith,
+            },
+            select: {
+              name: true,
+              mobileNumber: true
+            },
+          });
+
+
+          await Promise.all([
+            twilioClient.messages.create({
+              body: `Created a room with ${secondUsername?.name || "ghost"}! You can join the rooom from here: https://tinker-depot.vercel.app/call/${talkingWith}\n\nRoom ID: ${id}\n\n<3 TinkerDepot`,
+              from: env.TWILIO_PHONE_NUMBER,
+              to: firstUserName?.mobileNumber || "-1",
+            }),
+            twilioClient.messages.create({
+              body: `Created a room with ${firstUserName?.name || "ghost"}! You can join the rooom from here: https://tinker-depot.vercel.app/call/${userId}\n\nRoom ID: ${id}\n\n<3 TinkerDepot`,
+              from: env.TWILIO_PHONE_NUMBER,
+              to: secondUsername?.mobileNumber || "-1",
+            }),
+          ])
         } else {
           throw error;
         }
@@ -144,6 +178,12 @@ export const twilioRoomsRouter = createTRPCRouter({
         })
       }
 
+
+      await ctx.prisma.rooms.delete({
+        where: {
+          id: roomId
+        }
+      })
       return true;
     }),
 });
