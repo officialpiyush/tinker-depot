@@ -1,6 +1,6 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { GetServerSideProps } from "next/types";
+import { type GetServerSideProps } from "next/types";
 import { useEffect } from "react";
 import { getServerAuthSession } from "~/server/auth";
 

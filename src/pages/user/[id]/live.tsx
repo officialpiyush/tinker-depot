@@ -27,7 +27,7 @@ export default function UserLivePage() {
     return () => clearInterval(interval);
   }, []);
 
-  const { id } = router.query;
+  // const { id } = router.query;
 
   useEffect(() => {
     if (!session.data) {
