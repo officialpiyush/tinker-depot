@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import { LucidePhone, LucideVideo } from "lucide-react";
+import { LucideLoader, LucidePhone, LucideVideo } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { type GetServerSideProps } from "next/types";
@@ -27,6 +27,7 @@ export default function UserCallPage() {
   const router = useRouter();
   const session = useSession();
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [isAloneOnCall, setIsAloneOnCall] = useState(true);
   const [now, setNow] = useState("00:00 GG");
   const [timeElapsed, setTimeElapsed] = useState("00:00");
 
@@ -134,6 +135,8 @@ export default function UserCallPage() {
       },
     });
 
+    let peopleCount = 0;
+
     try {
       console.log("token", roomData?.token);
       const room = await connect(roomData?.token || "", {
@@ -143,18 +146,34 @@ export default function UserCallPage() {
         tracks: localTracks,
       });
 
+      peopleCount = 0;
+      room.participants.forEach((participant) => {
+        if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+          return;
+
+        peopleCount++;
+      });
+
+      if (peopleCount > 0) {
+        setIsAloneOnCall(false);
+      } else {
+        setIsAloneOnCall(true);
+      }
+
       room.participants.forEach((participant) => {
         if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
           return;
 
         participant.tracks.forEach(listenToSubscriptionEvents);
-        room.on("trackPublished", listenToSubscriptionEvents);
       });
+
+      room.on("trackPublished", listenToSubscriptionEvents);
 
       room.on("participantConnected", (participant) => {
         if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
           participant.tracks.forEach(listenToSubscriptionEvents);
-        room.on("trackPublished", listenToSubscriptionEvents);
+
+        setIsAloneOnCall(false);
       });
 
       room.participants.forEach((participant) => {
@@ -195,6 +214,8 @@ export default function UserCallPage() {
         if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
           return;
 
+        setIsAloneOnCall(false);
+
         participant.tracks.forEach((publication) => {
           if (publication.isSubscribed) {
             const track = publication.track;
@@ -219,6 +240,20 @@ export default function UserCallPage() {
 
       room.on("participantDisconnected", (participant) => {
         console.log(`Participant disconnected: ${participant.identity}`);
+
+        peopleCount = 0;
+        room.participants.forEach((participant) => {
+          if (participant.identity.startsWith(session.data?.user.id || "sdfsd"))
+            return;
+
+          peopleCount++;
+        });
+
+        if (peopleCount > 0) {
+          setIsAloneOnCall(false);
+        } else {
+          setIsAloneOnCall(true);
+        }
       });
     } catch (error) {
       console.log(`Unable to connect to Room`, error);
@@ -253,7 +288,25 @@ export default function UserCallPage() {
 
         {/* call screen */}
         <div className="h-full w-full flex-1" id="remote-media-div">
-          <video className="h-full w-full" ref={videoRef} id="video"></video>
+          {isAloneOnCall ? (
+            <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
+              <div className="rounded-full bg-white p-6 ring-2 ring-black">
+                <LucideLoader
+                  className="animate-spin"
+                  size={52}
+                  color="#8C78C3"
+                />
+              </div>
+
+              <span>
+                Waiting for{" "}
+                <span className="font-bold">{userData?.userName}</span> to join
+              </span>
+            </div>
+          ) : (
+            <video className="h-full w-full" ref={videoRef} id="video"></video>
+          )}
+
           {/* <div className="flex h-full flex-col items-center justify-center gap-4 rounded-lg bg-[#CABDD9]">
             <div className="rounded-full bg-white p-6 ring-2 ring-black">
               <LucidePhone size={52} color="#8C78C3" />
