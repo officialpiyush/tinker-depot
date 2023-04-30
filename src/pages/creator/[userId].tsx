@@ -34,9 +34,10 @@ export default function CreatorPage() {
 
   const { userId } = router.query;
 
-  const { data: creatorData, refetch: creatorRefetch } = api.creators.getCreator.useQuery({
-    userId: userId as string,
-  });
+  const { data: creatorData, refetch: creatorRefetch } =
+    api.creators.getCreator.useQuery({
+      userId: userId as string,
+    });
   const registerForNotificationMutation =
     api.creators.addToNotification.useMutation();
   const statusMutation = api.creators.toggleAvailability.useMutation();
@@ -56,7 +57,7 @@ export default function CreatorPage() {
 
   const registerForNotificaton = async () => {
     await registerForNotificationMutation.mutateAsync({
-      userId: session.data?.user.id || "ghost",
+      userId: userId as string,
     });
 
     alert("Done!");
@@ -66,8 +67,7 @@ export default function CreatorPage() {
     await statusMutation.mutateAsync({
       available: !creatorData?.available,
     });
-    
-    
+
     void creatorRefetch();
   };
 
