@@ -166,12 +166,12 @@ const Home: NextPage = () => {
             </div>
           </div>
 
-          <div className="flex h-full w-96 flex-col items-center overflow-y-auto rounded-xl bg-[#8C78C3] py-2 text-[#D8CFEF]">
-            <span className="scroll-m-20 text-center text-2xl font-medium transition-colors first:mt-0 pb-2">
+          <div className="flex h-full w-96 flex-col items-center overflow-y-auto rounded-xl bg-[#8C78C3] py-2 text-[#D8CFEF] scrollbar scrollbar-track-gray-100 scrollbar-thumb-gray-900">
+            <span className="scroll-m-20 pb-2 text-center text-2xl font-medium transition-colors first:mt-0">
               ChatRoom
             </span>
 
-            <div className="flex flex-col gap-4 overflow-y-auto w-full px-4">
+            <div className="flex w-full flex-col gap-4 overflow-y-auto scrollbar-thin scrollbar-thumb-rounded scrollbar-track-rounded scrollbar-thumb-zinc-600 scrollbar-track-gray-100 px-4">
               {messages?.messages.map((message) => (
                 <ChatBubble
                   className="w-full"
