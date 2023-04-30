@@ -46,7 +46,7 @@ export const creatorsRouter = createTRPCRouter({
 
     addToNotification: protectedProcedure
     .input(z.object({ userId: z.string() }))
-    .query(async ({ input, ctx }) => {
+    .mutation(async ({ input, ctx }) => {
         const {userId} = input;
 
         const requestUserId = ctx.session.user.id
