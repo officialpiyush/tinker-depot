@@ -76,7 +76,7 @@ export const twilioRoomsRouter = createTRPCRouter({
         env.TWILIO_API_SID,
         env.TWILIO_API_SECRET,
         {
-          identity: userId + nanoid(),
+          identity: `${userId}-${nanoid()}`,
         }
       );
 
