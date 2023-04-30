@@ -1,4 +1,4 @@
-import { LucidePersonStanding } from "lucide-react";
+import { LucidePersonStanding, LucideUser } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -50,7 +50,15 @@ export default function CreatorPage() {
           </div>
 
           {/* banner image */}
-          <div className="h-full w-full flex-1 bg-blue-600"></div>
+          <div className="relative h-full w-full flex-1 rounded-xl bg-[url(/dashboard/iot.png)]">
+            <div className="absolute bottom-0 left-0 right-0 flex items-center justify-center bg-[#4D6B70] py-3 text-white gap-3">
+              <div className="rounded-full p-1 ring-2 ring-white">
+                <LucideUser color="white" />
+              </div>
+
+              <div className="text[#D9D9D9]">Ricky Abdominoa</div>
+            </div>
+          </div>
 
           {/* project */}
           <div className="flex flex-col gap-2">
@@ -62,9 +70,9 @@ export default function CreatorPage() {
             ].map((chip, index) => (
               <Link
                 key={index}
-                href={`/creators/${session.data?.user.id || "ghost"}/${encodeURIComponent(
-                  chip
-                )}`}
+                href={`/creators/${
+                  session.data?.user.id || "ghost"
+                }/${encodeURIComponent(chip)}`}
               >
                 <Chip
                   className=" rounded-md bg-[#CABDD9] py-2 hover:underline"
