@@ -57,6 +57,10 @@ model User {
     image          String?
     accounts       Account[]
     sessions       Session[]
+    Creator        Creator?  @relation(fields: [creatorId], references: [id])
+    creatorId      String?
+
+    @@index([creatorId])
 }
 
 model VerificationToken {
@@ -72,4 +76,12 @@ model Rooms {
     firstUser  String
     secondUser String
     startedAt  DateTime @default(now())
+}
+
+model Creator {
+    id        String   @id @default(cuid())
+    userId    String
+    updatedAt DateTime @updatedAt
+    available Boolean  @default(false)
+    users     User[]
 }
