@@ -102,7 +102,7 @@ export const creatorsRouter = createTRPCRouter({
         },
       });
 
-      if (!userNumbers) {
+      if (!userNumbers || !available) {
         return {
           success: true,
         };
@@ -129,6 +129,17 @@ export const creatorsRouter = createTRPCRouter({
           });
         })
       )
+
+      await ctx.prisma.creator.update({
+        where: {
+          userId: requestUserId,
+        }, 
+        data: {
+          users: {
+            set: []
+          },
+        },
+      })
 
       return {
         success: true,
