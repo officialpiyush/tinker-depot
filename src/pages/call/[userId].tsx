@@ -30,6 +30,7 @@ export default function UserCallPage() {
   const [isAloneOnCall, setIsAloneOnCall] = useState(true);
   const [now, setNow] = useState("00:00 GG");
   const [timeElapsed, setTimeElapsed] = useState("00:00");
+  const [notes, setNotes] = useState("");
 
   const { userId } = router.query;
 
@@ -54,9 +55,11 @@ export default function UserCallPage() {
   const closeRoomMutation = api.twilioRooms.stopRoom.useMutation();
 
   const endCall = async () => {
+    console.log(notes);
     await closeRoomMutation.mutateAsync({
       roomId: roomData?.roomId || "",
       talkingWith: userId as string,
+      notes,
     });
 
     void router.push("/");
@@ -373,6 +376,9 @@ export default function UserCallPage() {
           </div>
           <div className="flex-1">
             <textarea
+              onKeyDown={(e) => setNotes(e.currentTarget.value)}
+              onKeyUp={(e) => setNotes(e.currentTarget.value)}
+              onChange={(e) => setNotes(e.currentTarget.value)}
               placeholder="Your place to take some notes"
               className="h-full w-full resize-none rounded-md bg-[#A7CD4F] p-2 placeholder-zinc-600 focus:outline-none"
             ></textarea>
